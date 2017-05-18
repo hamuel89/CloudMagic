@@ -1,0 +1,17 @@
+﻿Original Developer: WiNiFiX
+Original Name: CloudMagic
+Project Originally Started: May 2016
+Project Originally Ended: May 2017
+Developer: CloudMagic
+Project Restarted by CloudMagic: May 2017
+Project Name Changed to: CloudMagic
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 
+ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH 
+THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Anyone is allowed to copy, modify and redistribute this source code long as all modifications are made public in github.
+Commerical use of the code is not allowed.
+
+Anyone using / copying any part of the software must include this license
