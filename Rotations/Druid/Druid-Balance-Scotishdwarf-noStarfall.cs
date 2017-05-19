@@ -71,14 +71,14 @@
 // Completly reworked how rotation works
 // Version r1
 // Start building the rotation
-using PixelMagic.Helpers;
+using CloudMagic.Helpers;
 using System.Diagnostics;
 using System.Drawing;
 using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace PixelMagic.Rotation
+namespace CloudMagic.Rotation
 {
     public class BalanceDruidNoStarfall : CombatRoutine
     {
@@ -416,7 +416,7 @@ namespace PixelMagic.Rotation
             StarfallMacro = StarfallMacroBox.Checked;
             KBW = KBWBox.Checked;
             StarsurgeAsP = (int)StarsurgeNum.Value;
-            MessageBox.Show("Settings saved", "PixelMagic", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Settings saved", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Information);
             SettingsForm.Close();
         }
 
@@ -544,22 +544,22 @@ namespace PixelMagic.Rotation
                     return;
                 }
                 // Emerald Dreamcatcher Rotation
-                if (EmeraldDreamcatcher && WoW.IsInCombat && WoW.HasTarget && UseCooldowns && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin")&& (!WoW.IsMoving || WoW.PlayerHasBuff("StarfallP")))
+                if (EmeraldDreamcatcher && WoW.IsInCombat && WoW.HasTarget && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin")&& (!WoW.IsMoving || WoW.PlayerHasBuff("StarfallP")))
                 {
                     // actions.ed=astral_communion,if=astral_power.deficit>=75&buff.the_emerald_dreamcatcher.up
-                    if (AstralCommunion && UseCooldowns && WoW.CanCast("AstralCommunion") && !WoW.IsSpellOnCooldown("AstralCommunion") && WoW.CurrentAstralPower <= 25 && WoW.PlayerHasBuff("EmeraldDreamcatcherBuff"))
+                    if (AstralCommunion && WoW.HasBossTarget && WoW.CanCast("AstralCommunion") && !WoW.IsSpellOnCooldown("AstralCommunion") && WoW.CurrentAstralPower <= 25 && WoW.PlayerHasBuff("EmeraldDreamcatcherBuff"))
                     {
                         WoW.CastSpell("AstralCommunion");
                         return;
                     }
                     // actions.ed+=/incarnation,if=astral_power>=85&!buff.the_emerald_dreamcatcher.up|buff.bloodlust.up
-                    if (Incarnation && UseCooldowns && WoW.CanCast("Incarnation") && !WoW.IsSpellOnCooldown("Incarnation") && WoW.CurrentAstralPower >= 85 && (!WoW.PlayerHasBuff("EmeraldDreamcatcherBuff") || WoW.PlayerHasBuff("Bloodlust")))
+                    if (Incarnation && WoW.HasBossTarget && WoW.CanCast("Incarnation") && !WoW.IsSpellOnCooldown("Incarnation") && WoW.CurrentAstralPower >= 85 && (!WoW.PlayerHasBuff("EmeraldDreamcatcherBuff") || WoW.PlayerHasBuff("Bloodlust")))
                     {
                         WoW.CastSpell("Incarnation");
                         return;
                     }
                     // actions.ed+=/celestial_alignment,if=astral_power>=85&!buff.the_emerald_dreamcatcher.up
-                    if (!Incarnation && UseCooldowns && WoW.CanCast("CelestialAlignment") && !WoW.IsSpellOnCooldown("CelestialAlignment") && WoW.CurrentAstralPower >= 85 && !WoW.PlayerHasBuff("EmeraldDreamcatcherBuff"))
+                    if (!Incarnation && WoW.HasBossTarget && WoW.CanCast("CelestialAlignment") && !WoW.IsSpellOnCooldown("CelestialAlignment") && WoW.CurrentAstralPower >= 85 && !WoW.PlayerHasBuff("EmeraldDreamcatcherBuff"))
                     {
                         WoW.CastSpell("CelestialAlignment");
                         return;
@@ -695,7 +695,7 @@ namespace PixelMagic.Rotation
                     }
                 }
                 // Pull
-                if (WoW.IsInCombat && pullwatch.ElapsedMilliseconds < 15000 && UseCooldowns)
+                if (WoW.IsInCombat && pullwatch.ElapsedMilliseconds < 15000 && WoW.HasBossTarget)
                 {
                     // KBW if in use
                     if (KBW && !WoW.ItemOnCooldown("KBW") && WoW.IsSpellInRange("LStrike"))
@@ -982,7 +982,7 @@ namespace PixelMagic.Rotation
 					}
 				}
                 // Cooldown rotation
-                if (WoW.IsInCombat && WoW.HasTarget && UseCooldowns && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin"))
+                if (WoW.IsInCombat && WoW.HasTarget && WoW.HasBossTarget && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin"))
                 {
                     // KBW if in use
                     if (KBW && !WoW.ItemOnCooldown("KBW") && WoW.IsSpellInRange("LStrike"))
@@ -1631,7 +1631,7 @@ namespace PixelMagic.Rotation
                     return;
                 }
                 // Cooldown rotation
-                if (WoW.IsInCombat && WoW.HasTarget && UseCooldowns && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin"))
+                if (WoW.IsInCombat && WoW.HasTarget && WoW.HasBossTarget && WoW.TargetIsEnemy && WoW.PlayerHasBuff("Moonkin"))
                 {
                     // KBW if in use
                     if (KBW && !WoW.ItemOnCooldown("KBW") && WoW.IsSpellInRange("LStrike"))
