@@ -172,9 +172,10 @@
     <Compile Include="GUI\TransparentLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Helpers\Addons\Addon.cs" />
     <Compile Include="Helpers\Addons\Boss\LibBossIdsAddon.cs" />
     <Compile Include="Helpers\Addons\Boss\LibStub\LibStub.cs" />
+    <Compile Include="Helpers\Addons\Range\AddonLibRange.cs" />
+    <Compile Include="Helpers\Addons\Range\LibStub\LibStub.cs" />
     <Compile Include="Helpers\Aura.cs" />
     <Compile Include="Helpers\ConfigFile.cs" />
     <Compile Include="Helpers\Encryption.cs" />
@@ -199,11 +200,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Rotations\Druid\Druid-Balance-Scotishdwarf-noStarfall.cs" />
-    <Compile Include="Rotations\Druid\Druid-Balance-Scotishdwarf.cs" />
-    <Compile Include="Rotations\Druid\Druid-Feral-Scotishdwarf.cs" />
-    <Compile Include="Rotations\Druid\Druid-Guardian-Inhade.cs" />
-    <Compile Include="Rotations\Druid\Druid-Restoration-Inhade.cs" />
     <Compile Include="Rotation\CombatRoutine.cs" />
     <None Include="GUI\dsLanguages.xsc">
       <DependentUpon>dsLanguages.xsd</DependentUpon>
@@ -216,6 +212,13 @@
     <None Include="GUI\dsLanguages.xss">
       <DependentUpon>dsLanguages.xsd</DependentUpon>
     </None>
+    <None Include="Helpers\Addons\Addon.lua" />
+    <None Include="Helpers\Addons\Boss\LibBossIDs-1.0.lua" />
+    <None Include="Helpers\Addons\Boss\LibBossIDs-1.0.toc" />
+    <None Include="Helpers\Addons\Boss\LibStub\LibStub.lua" />
+    <None Include="Helpers\Addons\Range\LibSpellRange-1.0.lua" />
+    <None Include="Helpers\Addons\Range\LibSpellRange-1.0.toc" />
+    <None Include="Helpers\Addons\Range\LibStub\LibStub.lua" />
     <None Include="Resources\Refresh2_16x16.png" />
     <None Include="Resources\PageSetup_16x16.png" />
     <None Include="Resources\Project_16x16.png" />
@@ -310,15 +313,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Helpers\Addons\BossLib.xml" />
+    <Content Include="Helpers\Addons\Boss\lib.xml" />
+    <Content Include="Helpers\Addons\RangeLib.xml" />
+    <Content Include="Helpers\Addons\Range\lib.xml" />
     <Content Include="License.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Builds\Rotations\" />
+    <Folder Include="Rotations\Druid\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\CloudMagic\Bin\Debug\*.exe" "D:\Development\CloudMagicBuild\" /Y
-xcopy "$(SolutionDir)\CloudMagic\Helpers\Addons\Addon.cs" "D:\Development\CloudMagicBuild\LUA\" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)Bin\Debug\*.exe" "D:\Development\CloudMagicBuild\" /Y
+xcopy "$(SolutionDir)Helpers\Addons\Addon.lua" "D:\Development\CloudMagicBuild\LUA\" /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

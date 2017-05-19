@@ -111,7 +111,7 @@ local Spec = { Id ={
 	[266] = 0.35,
     [267] = 0.36},
 	Spell = {
-		[ 102 ] =  190984 , -- Solar Wrath
+	[ 102 ] =  190984 , -- Solar Wrath
 	[ 103 ] =  5221 , -- Shre
 	[ 105 ] =  190984 , -- Solar Wrat
 	[ 262 ] =  188196 , -- Lightning Bolt
@@ -143,6 +143,8 @@ local Spec = { Id ={
     [ 252 ] =  85948 , -- Festering Strike
 	[ 250 ] =  49998 , -- Death Strike
 	[ 71 ] =  12294 , -- Mortal Strike
+	[577] = "Demon's Bite",
+	[581] ="Shear",
 	[259] ="Mutilate",
 	[260] ="Saber Slash",
 	[261] ="Backstab",
@@ -503,7 +505,11 @@ local function updateSpellCooldowns(self, event)
             	--print("Spell with Id = " .. spellId .. " is on CD")
                 --print(" " ..spellId.. " remaining time: " ..math.floor(remainingTime)..  " ")
 				remainingTime = string.format("%00.2f",tostring(remainingTime) )
-				local green = tonumber(strsub(tostring(remainingTime), 1, 2))/100
+				if tonumber(remainingTime) >  100.00 then
+					green = 1
+				else
+					green = tonumber(strsub(tostring(remainingTime), 1, 2))/100
+				end
 				local blue = tonumber(strsub( tostring(remainingTime), -2,-1))/100
 				cooldownframes[spellId].t:SetColorTexture(0, green, blue, alphaColor)				
 				cooldownframes[spellId].t:SetAllPoints(false)
@@ -855,11 +861,6 @@ local function updatePower(self, event)
     
 	local power = UnitPower("player");		
 	local maxPower = UnitPowerMax("player");
-
-	
-	if (power ~= lastPower) then
-		lastPower = power
-			
 		-- If the class uses mana, then we need to calculate percent mana to show its power
 		-- http://wowwiki.wikia.com/wiki/API_UnitClass
 		-- http://wowwiki.wikia.com/wiki/SpecializationID
@@ -905,7 +906,6 @@ local function updatePower(self, event)
         end
 
 		--print ("Power = " .. power .. " R = ".. red .. " G = " .. green)
-	end
 end
 
 local lastHaste = 0;
@@ -1526,7 +1526,8 @@ local function InitializeOne()
 	powerFrame:RegisterEvent("PLAYER_ENTERING_WORLD")		
 	powerFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
     powerFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
-    powerFrame:RegisterUnitEvent("UNIT_POWER_FREQUENT","player")				
+    powerFrame:RegisterUnitEvent("UNIT_POWER","player")
+	powerFrame:RegisterUnitEvent("UNIT_HEALTH","target")			
 	powerFrame:RegisterUnitEvent("RUNE_POWER_UPDATE")
 	powerFrame:SetScript("OnEvent", updatePower)
 
@@ -1947,7 +1948,7 @@ end
 local function eventHandler(self, event, ...)
 	local arg1 = ...
 	if event == "ADDON_LOADED" then
-		if (arg1 == "[PixelMagic]") then
+		if (arg1 == "[CloudMagic]") then
 			InitializeOne()
             InitializeTwo()
 		end

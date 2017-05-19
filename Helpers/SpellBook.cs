@@ -43,6 +43,7 @@ namespace CloudMagic.Helpers
             dtSpells.Columns.Add("Spell Name");
             dtSpells.Columns.Add("Key Bind");
             dtSpells.Columns.Add("InternalNo"); // This stores the spell no in the array of spells that will be used on the addon
+            dtSpells.Columns.Add("My Keybind"); // This stores the spell no in the array of spells that will be used on the addon
 
             dtAuras = new DataTable();
             dtAuras.Columns.Add("Aura Id");
@@ -442,6 +443,45 @@ namespace CloudMagic.Helpers
 
         private static string LibBossPath => $"{WoW.AddonPath}\\{AddonName}\\Boss";
 
+        private static string LibRangeStubPath => $"{WoW.AddonPath}\\{AddonName}\\Range\\LibStub";
+
+        private static string LibRangePath => $"{WoW.AddonPath}\\{AddonName}\\Range";
+
+        private static void CustomLua()
+        {
+            Log.Write("Starting Addon Edit, for Custom Lua...");
+
+            try
+            {
+                var CustomLua = File.ReadAllText(FullRotationFilePath.Replace(".cs", ".lua"));
+                if (CustomLua.Trim() == "")
+                {
+                    Log.Write("Custom lua is blank, not using it...", Color.Gray);
+                    return;
+                }
+
+                try
+                {
+                    var addonlua = File.ReadAllText($"{AddonPath}\\{AddonName}.lua");
+
+                    addonlua = addonlua.Replace("local lastCombat = nil" + Environment.NewLine + "local alphaColor = 1", "local lastCombat = nil" + Environment.NewLine + "local alphaColor = 1" + Environment.NewLine + CustomLua);
+                    addonlua = addonlua.Replace("InitializeOne()" + Environment.NewLine + "            InitializeTwo()",
+                                                "InitializeOne()" + Environment.NewLine + "            InitializeTwo()" + Environment.NewLine + "            InitializeThree()");
+
+                    File.WriteAllText($"{AddonPath}\\{AddonName}.lua", addonlua);
+                    Log.Write("Addon Editing in progress", Color.Green);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch 
+            {
+                Log.Write("Custom Lua file not supplied, using default Lua", Color.Gray);
+            }            
+        }
+
         public static bool GenerateLUAFile(bool reloadUI = true)
         {
             try
@@ -454,6 +494,12 @@ namespace CloudMagic.Helpers
 
                 if (!Directory.Exists(LibStubPath))
                     Directory.CreateDirectory(LibStubPath);
+
+                if (!Directory.Exists(LibRangePath))
+                    Directory.CreateDirectory(LibRangePath);
+
+                if (!Directory.Exists(LibRangeStubPath))
+                    Directory.CreateDirectory(LibRangeStubPath);
 
                 Log.Write($"Creating Addon from SpellBook, AddonName will be [{AddonName}]...");
 
@@ -476,20 +522,18 @@ namespace CloudMagic.Helpers
                     sr.WriteLine($"## SavedVariablesPerCharacter: {AddonName.Replace("\r", "").Replace("\n", "")}_settings");
                     sr.WriteLine($"{AddonName.Replace("\r", "").Replace("\n", "")}.lua");
                     sr.WriteLine(@"#@no-lib-strip@");
-                    sr.WriteLine("PixelBoss.xml");
+                    sr.WriteLine("BossLib.xml");
+                    sr.WriteLine("RangeLib.xml");
                     sr.WriteLine(@"#@end-no-lib-strip@");
                     sr.Close();
                 }
 
-                Log.Write("Creating file: [PixelBoss.xml]", Color.Gray);
+ ///////////////////////////////////////////////////////////////////////////////////////////////// BOSS LIB /////////////////////////////////////////
+ 
+                Log.Write("Creating file: [BossLib.xml]", Color.Gray);
 
-                using (var sr = new StreamWriter($"{AddonPath}\\PixelBoss.xml"))
+                using (var sr = new StreamWriter($"{AddonPath}\\BossLib.xml"))
                 {
-                     // <Ui xmlns = "http://www.blizzard.com/wow/ui/" xmlns: xsi = "http://www.w3.org/2001/XMLSchema-instance" xsi: schemaLocation = "http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd" >
-                     // <Script file = "Boss\LibStub\LibStub.lua" />
-                     // <Include file = "Boss\lib.xml" />
-                     // </ Ui >
-
                     sr.WriteLine(@"<Ui xmlns=""http://www.blizzard.com/wow/ui/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd"">");
                     sr.WriteLine(@"<Script file=""Boss\LibStub\LibStub.lua""/>");
                     sr.WriteLine(@"<Include file=""Boss\lib.xml""/>");
@@ -497,13 +541,13 @@ namespace CloudMagic.Helpers
                     sr.Close();
                 }
 
-                Log.Write($"Creating file: [{AddonName}.lua]", Color.Gray);
+                Log.Write("Creating file: [Boss\\LibBossIDs-1.0.toc]", Color.Gray);
 
                 using (var sr = new StreamWriter($"{LibBossPath}\\LibBossIDs-1.0.toc"))
                 {
                     sr.WriteLine(InterfaceVersion.Contains("-")
-                        ? $"## Interface: {InterfaceVersion.Split('-')[1].Trim()}"
-                        : $"## Interface: {InterfaceVersion}");
+						? $"## Interface: {InterfaceVersion.Split('-')[1].Trim()}" 
+						: $"## Interface: {InterfaceVersion}");
                     sr.WriteLine("## LoadOnDemand: 1");
                     sr.WriteLine("## Title: Lib: BossIDs-1.0");
                     sr.WriteLine("## A library to provide mobIDs for bosses.");
@@ -519,6 +563,8 @@ namespace CloudMagic.Helpers
                     sr.Close();
                 }
 
+                Log.Write("Creating file: [Boss\\lib.xml]", Color.Gray);
+
                 using (var sr = new StreamWriter($"{AddonPath}\\Boss\\lib.xml"))
                 {
                     sr.WriteLine(@"<Ui xmlns=""http://www.blizzard.com/wow/ui/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd"">");
@@ -527,6 +573,8 @@ namespace CloudMagic.Helpers
                     sr.Close();
                 }
 
+                Log.Write("Creating file: [Boss\\LibBossIDs-1.0.lua]", Color.Gray);
+
                 using (var sr = new StreamWriter($"{AddonPath}\\Boss\\LibBossIDs-1.0.lua"))
                 {
                     var luaContents1 = AddonLibBoss.LuaContents;
@@ -534,12 +582,77 @@ namespace CloudMagic.Helpers
                     sr.Close();
                 }
 
+                Log.Write("Creating file: [Boss\\LibStub\\LibStub.lua]", Color.Gray);
+
                 using (var sr = new StreamWriter($"{AddonPath}\\Boss\\LibStub\\LibStub.lua"))
                 {
                     var luaContents2 = AddonLibStub.LuaContents;
                     sr.WriteLine(luaContents2);
                     sr.Close();
                 }
+
+ ///////////////////////////////////////////////////////////////////////////////////////////////// RANGE LIB /////////////////////////////////////////
+
+                Log.Write("Creating file: [RangeLib.xml]", Color.Gray);
+
+                using (var sr = new StreamWriter($"{AddonPath}\\RangeLib.xml"))
+                {
+                    sr.WriteLine(@"<Ui xmlns=""http://www.blizzard.com/wow/ui/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd"">");
+                    sr.WriteLine(@"<Script file=""Range\LibStub\LibStub.lua""/>");
+                    sr.WriteLine(@"<Include file=""Range\lib.xml""/>");
+                    sr.WriteLine(@"</Ui>");
+                    sr.Close();
+                }
+
+                Log.Write("Creating file: [Range\\LibSpellRange - 1.0.toc]", Color.Gray);
+
+                using (var sr = new StreamWriter($"{LibRangePath}\\LibSpellRange-1.0.toc"))
+                {
+                    sr.WriteLine(InterfaceVersion.Contains("-") ? $"## Interface: {InterfaceVersion.Split('-')[1].Trim()}" : $"## Interface: {InterfaceVersion}");
+                    sr.WriteLine("## LoadOnDemand: 1");
+                    sr.WriteLine("## Title: Lib: SpellRange-1.0");
+                    sr.WriteLine("## Notes: Provides enhanced spell range checking functionality");
+                    sr.WriteLine("## Author: Cybeloras of Aerie Peak");
+                    sr.WriteLine("## X-Category: Library");
+                    sr.WriteLine("## X-License: Public Domain");
+                    sr.WriteLine("## X-Curse-Packaged-Version: 1.0.011");
+                    sr.WriteLine("## X-Curse-Project-Name: LibSpellRange-1.0");
+                    sr.WriteLine("## X-Curse-Project-ID: libspellrange-1-0");
+                    sr.WriteLine("## X-Curse-Repository-ID: wow/libspellrange-1-0/mainline");
+                    sr.WriteLine("LibStub\\LibStub.lua");
+                    sr.WriteLine("lib.xml");
+                    sr.Close();
+                }
+
+                Log.Write("Creating file: [Range\\lib.xml]", Color.Gray);
+
+                using (var sr = new StreamWriter($"{AddonPath}\\Range\\lib.xml"))
+                {
+                    sr.WriteLine(@"<Ui xmlns=""http://www.blizzard.com/wow/ui/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd"">");
+                    sr.WriteLine(@"<Script file=""LibSpellRange-1.0.lua"" />");
+                    sr.WriteLine("</Ui>");
+                    sr.Close();
+                }
+
+                Log.Write("Creating file: [Range\\LibSpellRange-1.0.lua]", Color.Gray);
+
+                using (var sr = new StreamWriter($"{AddonPath}\\Range\\LibSpellRange-1.0.lua"))
+                {
+                    var luaContents = AddonLibRange.LuaContents;
+                    sr.WriteLine(luaContents);
+                    sr.Close();
+                }
+
+                Log.Write("Creating file: [Range\\LibStub\\LibStub.lua]", Color.Gray);
+
+                using (var sr = new StreamWriter($"{AddonPath}\\Range\\LibStub\\LibStub.lua"))
+                {
+                    var luaContents = AddonLibStubRange.LuaContents;
+                    sr.WriteLine(luaContents);
+                    sr.Close();
+                }
+
+                Log.Write($"Creating file: [{AddonName}.lua]", Color.Gray);
 
                 using (var sr = new StreamWriter($"{AddonPath}\\{AddonName}.lua"))
                 {
@@ -620,34 +733,22 @@ namespace CloudMagic.Helpers
                     items += "}" + Environment.NewLine;
 
                     sr.Write(items);
-
-                    var luaContents = Addon.LuaContents;
-
-                    luaContents = luaContents.Replace("DoIt", AddonName);
-                    luaContents = luaContents.Replace("[LatencyForAddon]", ConfigFile.LatencyForAddon);
+                    var directory = Directory.GetCurrentDirectory() + "\\LUA\\Addon.lua";
+                    var luaContents = File.ReadAllText(directory);
+                    luaContents = luaContents.Replace("[CloudMagic]", AddonName);
                     
-                    var AddonInterfaceVersion = InterfaceVersion;
-                    if (InterfaceVersion.Contains("-"))
-                        AddonInterfaceVersion = InterfaceVersion.Split('-')[1].Trim();
-
-                    if (AddonInterfaceVersion == "70000" || AddonInterfaceVersion == "70100") // Legion changes as per http://www.wowinterface.com/forums/showthread.php?t=53248
-                    {
-                        luaContents = luaContents.Replace("SetTexture", "SetColorTexture");
-                        Log.Write("Legion Selected changing SetTexture to SetColorTexture");
-                    }
-
                     sr.WriteLine(luaContents);
                     sr.Close();
                 }
-
+                
                 Log.Write("Addon file generated.", Color.Green);
+
+                CustomLua();
+
                 Log.Write($"Make sure that the addon: [{AddonName}] is enabled in your list of WoW Addons or the rotation bot will fail to work", Color.Black);
 
                 if (reloadUI)
                 {
-                    if (!Debugger.IsAttached)
-                        WoW.SendMacro("/console scriptErrors 1");   // Show wow Lua errors
-                    
                     WoW.SendMacro("/reload");
                 }
 
