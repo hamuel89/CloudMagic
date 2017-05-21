@@ -49,5 +49,10 @@ namespace CloudMagic.GUI
             ConfigFile.LicenseAccepted = true;
             Close();
         }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

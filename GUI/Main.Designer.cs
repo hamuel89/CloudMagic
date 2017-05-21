@@ -41,13 +41,9 @@
             this.spellbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadAddonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.encryptCombatRoutineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageToByteArrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.submitTicketToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.targetParty1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.targetParty2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testingPixelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.encryptCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.licenseAgreementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtMouseXYClick = new System.Windows.Forms.TextBox();
             this.txtMouseXY = new System.Windows.Forms.TextBox();
@@ -65,23 +61,20 @@
             this.cmdReloadRotation = new System.Windows.Forms.Button();
             this.cmdRotationSettings = new System.Windows.Forms.Button();
             this.cmdStartBot = new System.Windows.Forms.Button();
-            this.nudLatency = new System.Windows.Forms.NumericUpDown();
-            this.transparentLabel1 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel3 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.prgTargetHealth = new ColorProgressBar.ColorProgressBar();
-            this.transparentLabel12 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel11 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel10 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel7 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel8 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel6 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.transparentLabel5 = new CloudMagic.GUI.GUI.TransparentLabel();
-            this.prgPower = new ColorProgressBar.ColorProgressBar();
-            this.prgPlayerHealth = new ColorProgressBar.ColorProgressBar();
+            this.transparentLabel10 = new System.Windows.Forms.Label();
+            this.transparentLabel7 = new System.Windows.Forms.Label();
+            this.transparentLabel8 = new System.Windows.Forms.Label();
+            this.transparentLabel6 = new System.Windows.Forms.Label();
+            this.transparentLabel5 = new System.Windows.Forms.Label();
+            this.txtPlayerHealth = new System.Windows.Forms.TextBox();
+            this.transparentLabel1 = new System.Windows.Forms.Label();
+            this.txtPlayerPower = new System.Windows.Forms.TextBox();
+            this.transparentLabel2 = new System.Windows.Forms.Label();
+            this.txtTargetHealth = new System.Windows.Forms.TextBox();
+            this.transparentLabel3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPulse)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLatency)).BeginInit();
             this.SuspendLayout();
             // 
             // rtbLog
@@ -121,12 +114,11 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.menuStrip1.BackColor = System.Drawing.Color.White;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.setupToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem,
             this.licenseAgreementToolStripMenuItem});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -140,6 +132,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadRotationToolStripMenuItem,
             this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             this.fileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileToolStripMenuItem.Image")));
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
@@ -165,6 +158,7 @@
             this.hotkeysToolStripMenuItem,
             this.spellbookToolStripMenuItem,
             this.reloadAddonToolStripMenuItem});
+            this.setupToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             this.setupToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("setupToolStripMenuItem.Image")));
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
             this.setupToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
@@ -173,7 +167,7 @@
             // hotkeysToolStripMenuItem
             // 
             this.hotkeysToolStripMenuItem.Name = "hotkeysToolStripMenuItem";
-            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.hotkeysToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.hotkeysToolStripMenuItem.Text = "Hotkeys";
             this.hotkeysToolStripMenuItem.Click += new System.EventHandler(this.hotkeysToolStripMenuItem_Click);
             // 
@@ -181,84 +175,53 @@
             // 
             this.spellbookToolStripMenuItem.Enabled = false;
             this.spellbookToolStripMenuItem.Name = "spellbookToolStripMenuItem";
-            this.spellbookToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
-            this.spellbookToolStripMenuItem.Text = "Spellbook";
+            this.spellbookToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.spellbookToolStripMenuItem.Text = "Keybinds to Spells";
             this.spellbookToolStripMenuItem.Click += new System.EventHandler(this.spellbookToolStripMenuItem_Click);
             // 
             // reloadAddonToolStripMenuItem
             // 
             this.reloadAddonToolStripMenuItem.Name = "reloadAddonToolStripMenuItem";
-            this.reloadAddonToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.reloadAddonToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.reloadAddonToolStripMenuItem.Text = "Reload Addon";
             this.reloadAddonToolStripMenuItem.Click += new System.EventHandler(this.reloadAddonToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.encryptCombatRoutineToolStripMenuItem,
-            this.imageToByteArrayToolStripMenuItem});
+            this.imageToByteArrayToolStripMenuItem,
+            this.testingPixelsToolStripMenuItem,
+            this.encryptCRToolStripMenuItem});
+            this.toolsToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             this.toolsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toolsToolStripMenuItem.Image")));
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
-            // encryptCombatRoutineToolStripMenuItem
-            // 
-            this.encryptCombatRoutineToolStripMenuItem.Name = "encryptCombatRoutineToolStripMenuItem";
-            this.encryptCombatRoutineToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
-            this.encryptCombatRoutineToolStripMenuItem.Text = "Encrypt Combat Routine";
-            this.encryptCombatRoutineToolStripMenuItem.Click += new System.EventHandler(this.encryptCombatRoutineToolStripMenuItem_Click);
-            // 
             // imageToByteArrayToolStripMenuItem
             // 
             this.imageToByteArrayToolStripMenuItem.Name = "imageToByteArrayToolStripMenuItem";
-            this.imageToByteArrayToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+            this.imageToByteArrayToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.imageToByteArrayToolStripMenuItem.Text = "Image to byte array";
             this.imageToByteArrayToolStripMenuItem.Click += new System.EventHandler(this.imageToByteArrayToolStripMenuItem_Click);
             // 
-            // helpToolStripMenuItem
+            // testingPixelsToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdatesToolStripMenuItem,
-            this.submitTicketToolStripMenuItem,
-            this.targetParty1ToolStripMenuItem,
-            this.targetParty2ToolStripMenuItem});
-            this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.testingPixelsToolStripMenuItem.Name = "testingPixelsToolStripMenuItem";
+            this.testingPixelsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.testingPixelsToolStripMenuItem.Text = "Testing Pixels";
+            this.testingPixelsToolStripMenuItem.Click += new System.EventHandler(this.testingPixelsToolStripMenuItem_Click);
             // 
-            // checkForUpdatesToolStripMenuItem
+            // encryptCRToolStripMenuItem
             // 
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates...";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
-            // 
-            // submitTicketToolStripMenuItem
-            // 
-            this.submitTicketToolStripMenuItem.Enabled = false;
-            this.submitTicketToolStripMenuItem.Name = "submitTicketToolStripMenuItem";
-            this.submitTicketToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.submitTicketToolStripMenuItem.Text = "Submit Ticket";
-            this.submitTicketToolStripMenuItem.Click += new System.EventHandler(this.submitTicketToolStripMenuItem_Click);
-            // 
-            // targetParty1ToolStripMenuItem
-            // 
-            this.targetParty1ToolStripMenuItem.Name = "targetParty1ToolStripMenuItem";
-            this.targetParty1ToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.targetParty1ToolStripMenuItem.Text = "Target Party 1";
-            this.targetParty1ToolStripMenuItem.Click += new System.EventHandler(this.targetParty1ToolStripMenuItem_Click);
-            // 
-            // targetParty2ToolStripMenuItem
-            // 
-            this.targetParty2ToolStripMenuItem.Name = "targetParty2ToolStripMenuItem";
-            this.targetParty2ToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.targetParty2ToolStripMenuItem.Text = "Target Party 2";
-            this.targetParty2ToolStripMenuItem.Click += new System.EventHandler(this.targetParty2ToolStripMenuItem_Click);
+            this.encryptCRToolStripMenuItem.Name = "encryptCRToolStripMenuItem";
+            this.encryptCRToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.encryptCRToolStripMenuItem.Text = "Encrypt CR";
+            this.encryptCRToolStripMenuItem.Click += new System.EventHandler(this.encryptCRToolStripMenuItem_Click);
             // 
             // licenseAgreementToolStripMenuItem
             // 
+            this.licenseAgreementToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
             this.licenseAgreementToolStripMenuItem.Image = global::CloudMagic.GUI.Properties.Resources.Comment_16x16;
             this.licenseAgreementToolStripMenuItem.Name = "licenseAgreementToolStripMenuItem";
             this.licenseAgreementToolStripMenuItem.Size = new System.Drawing.Size(136, 20);
@@ -297,7 +260,7 @@
             // nudPulse
             // 
             this.nudPulse.ForeColor = System.Drawing.Color.Black;
-            this.nudPulse.Location = new System.Drawing.Point(880, 470);
+            this.nudPulse.Location = new System.Drawing.Point(880, 263);
             this.nudPulse.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -336,13 +299,15 @@
             // 
             // toolStripStatusLabel2
             // 
+            this.toolStripStatusLabel2.BackColor = System.Drawing.Color.MintCream;
             this.toolStripStatusLabel2.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel2.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.toolStripStatusLabel2.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(76, 19);
-            this.toolStripStatusLabel2.Text = "CloudMagic";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(226, 19);
+            this.toolStripStatusLabel2.Text = "CloudMagic (developed by CloudMagic)";
             // 
             // toolStripStatusLabel3
             // 
@@ -350,6 +315,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel3.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.toolStripStatusLabel3.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(69, 19);
             this.toolStripStatusLabel3.Text = "Version: {0}";
@@ -360,6 +326,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.toolStripStatusLabel1.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(85, 19);
             this.toolStripStatusLabel1.Text = "Build Date: {0}";
@@ -371,12 +338,11 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel5.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.toolStripStatusLabel5.ForeColor = System.Drawing.Color.Gray;
+            this.toolStripStatusLabel5.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel5.Name = "toolStripStatusLabel5";
             this.toolStripStatusLabel5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.toolStripStatusLabel5.Size = new System.Drawing.Size(325, 19);
+            this.toolStripStatusLabel5.Size = new System.Drawing.Size(329, 19);
             this.toolStripStatusLabel5.Spring = true;
-            this.toolStripStatusLabel5.Text = "Time above = GMT +2";
             this.toolStripStatusLabel5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolStripStatusLabel4
@@ -385,7 +351,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel4.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.toolStripStatusLabel4.ForeColor = System.Drawing.Color.Gray;
+            this.toolStripStatusLabel4.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
             this.toolStripStatusLabel4.Size = new System.Drawing.Size(227, 19);
             this.toolStripStatusLabel4.Text = "Hoykey: Ctrl + F5 = Reload Rotation && UI";
@@ -396,7 +362,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.toolStripStatusLabel6.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.toolStripStatusLabel6.ForeColor = System.Drawing.Color.Gray;
+            this.toolStripStatusLabel6.ForeColor = System.Drawing.Color.Black;
             this.toolStripStatusLabel6.Name = "toolStripStatusLabel6";
             this.toolStripStatusLabel6.Size = new System.Drawing.Size(154, 19);
             this.toolStripStatusLabel6.Text = "Ctrl + F6 = Reload Rotation";
@@ -414,6 +380,7 @@
             // 
             // cmdReloadRotationAndUI
             // 
+            this.cmdReloadRotationAndUI.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmdReloadRotationAndUI.Enabled = false;
             this.cmdReloadRotationAndUI.ForeColor = System.Drawing.Color.Black;
             this.cmdReloadRotationAndUI.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -428,6 +395,7 @@
             // 
             // cmdReloadRotation
             // 
+            this.cmdReloadRotation.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmdReloadRotation.Enabled = false;
             this.cmdReloadRotation.ForeColor = System.Drawing.Color.Black;
             this.cmdReloadRotation.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -442,6 +410,7 @@
             // 
             // cmdRotationSettings
             // 
+            this.cmdRotationSettings.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmdRotationSettings.Enabled = false;
             this.cmdRotationSettings.ForeColor = System.Drawing.Color.Black;
             this.cmdRotationSettings.Image = ((System.Drawing.Image)(resources.GetObject("cmdRotationSettings.Image")));
@@ -457,6 +426,7 @@
             // 
             // cmdStartBot
             // 
+            this.cmdStartBot.BackColor = System.Drawing.Color.WhiteSmoke;
             this.cmdStartBot.Enabled = false;
             this.cmdStartBot.ForeColor = System.Drawing.Color.Black;
             this.cmdStartBot.Image = ((System.Drawing.Image)(resources.GetObject("cmdStartBot.Image")));
@@ -470,85 +440,6 @@
             this.cmdStartBot.UseVisualStyleBackColor = false;
             this.cmdStartBot.Click += new System.EventHandler(this.cmdStartBot_Click);
             // 
-            // nudLatency
-            // 
-            this.nudLatency.ForeColor = System.Drawing.Color.Black;
-            this.nudLatency.Location = new System.Drawing.Point(880, 496);
-            this.nudLatency.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.nudLatency.Name = "nudLatency";
-            this.nudLatency.Size = new System.Drawing.Size(61, 20);
-            this.nudLatency.TabIndex = 47;
-            this.nudLatency.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.nudLatency.ValueChanged += new System.EventHandler(this.nudLatency_ValueChanged);
-            // 
-            // transparentLabel1
-            // 
-            this.transparentLabel1.ForeColor = System.Drawing.Color.Black;
-            this.transparentLabel1.Location = new System.Drawing.Point(799, 499);
-            this.transparentLabel1.Name = "transparentLabel1";
-            this.transparentLabel1.Size = new System.Drawing.Size(58, 15);
-            this.transparentLabel1.TabIndex = 48;
-            this.transparentLabel1.TabStop = false;
-            this.transparentLabel1.Text = "Latency";
-            this.transparentLabel1.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // transparentLabel3
-            // 
-            this.transparentLabel3.ForeColor = System.Drawing.Color.White;
-            this.transparentLabel3.Location = new System.Drawing.Point(825, 166);
-            this.transparentLabel3.Name = "transparentLabel3";
-            this.transparentLabel3.Size = new System.Drawing.Size(69, 15);
-            this.transparentLabel3.TabIndex = 32;
-            this.transparentLabel3.TabStop = false;
-            this.transparentLabel3.Text = "Target Health";
-            this.transparentLabel3.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // prgTargetHealth
-            // 
-            this.prgTargetHealth.BackColor = System.Drawing.Color.White;
-            this.prgTargetHealth.BarColor = System.Drawing.Color.Salmon;
-            this.prgTargetHealth.BorderColor = System.Drawing.Color.Green;
-            this.prgTargetHealth.FillStyle = ColorProgressBar.ColorProgressBar.FillStyles.Solid;
-            this.prgTargetHealth.ForeColor = System.Drawing.Color.White;
-            this.prgTargetHealth.Location = new System.Drawing.Point(799, 163);
-            this.prgTargetHealth.Maximum = 100;
-            this.prgTargetHealth.Minimum = 0;
-            this.prgTargetHealth.Name = "prgTargetHealth";
-            this.prgTargetHealth.Size = new System.Drawing.Size(142, 20);
-            this.prgTargetHealth.Step = 10;
-            this.prgTargetHealth.TabIndex = 42;
-            this.prgTargetHealth.Value = 70;
-            // 
-            // transparentLabel12
-            // 
-            this.transparentLabel12.ForeColor = System.Drawing.Color.White;
-            this.transparentLabel12.Location = new System.Drawing.Point(832, 141);
-            this.transparentLabel12.Name = "transparentLabel12";
-            this.transparentLabel12.Size = new System.Drawing.Size(54, 15);
-            this.transparentLabel12.TabIndex = 41;
-            this.transparentLabel12.TabStop = false;
-            this.transparentLabel12.Text = "My Power";
-            this.transparentLabel12.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
-            // transparentLabel11
-            // 
-            this.transparentLabel11.ForeColor = System.Drawing.Color.White;
-            this.transparentLabel11.Location = new System.Drawing.Point(832, 116);
-            this.transparentLabel11.Name = "transparentLabel11";
-            this.transparentLabel11.Size = new System.Drawing.Size(54, 15);
-            this.transparentLabel11.TabIndex = 40;
-            this.transparentLabel11.TabStop = false;
-            this.transparentLabel11.Text = "My Health";
-            this.transparentLabel11.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            // 
             // transparentLabel10
             // 
             this.transparentLabel10.ForeColor = System.Drawing.Color.Black;
@@ -556,103 +447,122 @@
             this.transparentLabel10.Name = "transparentLabel10";
             this.transparentLabel10.Size = new System.Drawing.Size(85, 15);
             this.transparentLabel10.TabIndex = 39;
-            this.transparentLabel10.TabStop = false;
             this.transparentLabel10.Text = "Disable Overlay";
-            this.transparentLabel10.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // transparentLabel7
             // 
+            this.transparentLabel7.AutoSize = true;
             this.transparentLabel7.ForeColor = System.Drawing.Color.Black;
             this.transparentLabel7.Location = new System.Drawing.Point(799, 241);
             this.transparentLabel7.Name = "transparentLabel7";
-            this.transparentLabel7.Size = new System.Drawing.Size(59, 15);
+            this.transparentLabel7.Size = new System.Drawing.Size(52, 13);
             this.transparentLabel7.TabIndex = 37;
-            this.transparentLabel7.TabStop = false;
             this.transparentLabel7.Text = "Click (x,y)";
-            this.transparentLabel7.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // transparentLabel8
             // 
+            this.transparentLabel8.AutoSize = true;
             this.transparentLabel8.ForeColor = System.Drawing.Color.Black;
             this.transparentLabel8.Location = new System.Drawing.Point(799, 216);
             this.transparentLabel8.Name = "transparentLabel8";
-            this.transparentLabel8.Size = new System.Drawing.Size(59, 15);
+            this.transparentLabel8.Size = new System.Drawing.Size(61, 13);
             this.transparentLabel8.TabIndex = 36;
-            this.transparentLabel8.TabStop = false;
             this.transparentLabel8.Text = "Mouse (x,y)";
-            this.transparentLabel8.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // transparentLabel6
             // 
+            this.transparentLabel6.AutoSize = true;
             this.transparentLabel6.ForeColor = System.Drawing.Color.Black;
-            this.transparentLabel6.Location = new System.Drawing.Point(799, 475);
+            this.transparentLabel6.Location = new System.Drawing.Point(799, 266);
             this.transparentLabel6.Name = "transparentLabel6";
-            this.transparentLabel6.Size = new System.Drawing.Size(58, 15);
+            this.transparentLabel6.Size = new System.Drawing.Size(55, 13);
             this.transparentLabel6.TabIndex = 35;
-            this.transparentLabel6.TabStop = false;
             this.transparentLabel6.Text = "Pulse (ms)";
-            this.transparentLabel6.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
             // transparentLabel5
             // 
+            this.transparentLabel5.AutoSize = true;
             this.transparentLabel5.ForeColor = System.Drawing.Color.Black;
             this.transparentLabel5.Location = new System.Drawing.Point(799, 191);
             this.transparentLabel5.Name = "transparentLabel5";
-            this.transparentLabel5.Size = new System.Drawing.Size(85, 15);
+            this.transparentLabel5.Size = new System.Drawing.Size(76, 13);
             this.transparentLabel5.TabIndex = 34;
-            this.transparentLabel5.TabStop = false;
             this.transparentLabel5.Text = "Target Casting";
-            this.transparentLabel5.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             // 
-            // prgPower
+            // txtPlayerHealth
             // 
-            this.prgPower.BackColor = System.Drawing.Color.White;
-            this.prgPower.BarColor = System.Drawing.Color.PaleTurquoise;
-            this.prgPower.BorderColor = System.Drawing.Color.Green;
-            this.prgPower.FillStyle = ColorProgressBar.ColorProgressBar.FillStyles.Solid;
-            this.prgPower.ForeColor = System.Drawing.Color.White;
-            this.prgPower.Location = new System.Drawing.Point(799, 138);
-            this.prgPower.Maximum = 100;
-            this.prgPower.Minimum = 0;
-            this.prgPower.Name = "prgPower";
-            this.prgPower.Size = new System.Drawing.Size(142, 20);
-            this.prgPower.Step = 10;
-            this.prgPower.TabIndex = 25;
-            this.prgPower.Value = 70;
+            this.txtPlayerHealth.ForeColor = System.Drawing.Color.White;
+            this.txtPlayerHealth.Location = new System.Drawing.Point(880, 114);
+            this.txtPlayerHealth.Name = "txtPlayerHealth";
+            this.txtPlayerHealth.ReadOnly = true;
+            this.txtPlayerHealth.Size = new System.Drawing.Size(61, 20);
+            this.txtPlayerHealth.TabIndex = 46;
             // 
-            // prgPlayerHealth
+            // transparentLabel1
             // 
-            this.prgPlayerHealth.BackColor = System.Drawing.Color.White;
-            this.prgPlayerHealth.BarColor = System.Drawing.Color.Salmon;
-            this.prgPlayerHealth.BorderColor = System.Drawing.Color.Green;
-            this.prgPlayerHealth.FillStyle = ColorProgressBar.ColorProgressBar.FillStyles.Solid;
-            this.prgPlayerHealth.ForeColor = System.Drawing.Color.White;
-            this.prgPlayerHealth.Location = new System.Drawing.Point(799, 113);
-            this.prgPlayerHealth.Maximum = 100;
-            this.prgPlayerHealth.Minimum = 0;
-            this.prgPlayerHealth.Name = "prgPlayerHealth";
-            this.prgPlayerHealth.Size = new System.Drawing.Size(142, 20);
-            this.prgPlayerHealth.Step = 10;
-            this.prgPlayerHealth.TabIndex = 24;
-            this.prgPlayerHealth.Value = 70;
+            this.transparentLabel1.AutoSize = true;
+            this.transparentLabel1.ForeColor = System.Drawing.Color.Black;
+            this.transparentLabel1.Location = new System.Drawing.Point(799, 117);
+            this.transparentLabel1.Name = "transparentLabel1";
+            this.transparentLabel1.Size = new System.Drawing.Size(70, 13);
+            this.transparentLabel1.TabIndex = 47;
+            this.transparentLabel1.Text = "Player Health";
+            // 
+            // txtPlayerPower
+            // 
+            this.txtPlayerPower.ForeColor = System.Drawing.Color.White;
+            this.txtPlayerPower.Location = new System.Drawing.Point(880, 139);
+            this.txtPlayerPower.Name = "txtPlayerPower";
+            this.txtPlayerPower.ReadOnly = true;
+            this.txtPlayerPower.Size = new System.Drawing.Size(61, 20);
+            this.txtPlayerPower.TabIndex = 48;
+            // 
+            // transparentLabel2
+            // 
+            this.transparentLabel2.AutoSize = true;
+            this.transparentLabel2.ForeColor = System.Drawing.Color.Black;
+            this.transparentLabel2.Location = new System.Drawing.Point(799, 142);
+            this.transparentLabel2.Name = "transparentLabel2";
+            this.transparentLabel2.Size = new System.Drawing.Size(54, 13);
+            this.transparentLabel2.TabIndex = 49;
+            this.transparentLabel2.Text = "My Power";
+            // 
+            // txtTargetHealth
+            // 
+            this.txtTargetHealth.ForeColor = System.Drawing.Color.White;
+            this.txtTargetHealth.Location = new System.Drawing.Point(880, 163);
+            this.txtTargetHealth.Name = "txtTargetHealth";
+            this.txtTargetHealth.ReadOnly = true;
+            this.txtTargetHealth.Size = new System.Drawing.Size(61, 20);
+            this.txtTargetHealth.TabIndex = 50;
+            // 
+            // transparentLabel3
+            // 
+            this.transparentLabel3.AutoSize = true;
+            this.transparentLabel3.ForeColor = System.Drawing.Color.Black;
+            this.transparentLabel3.Location = new System.Drawing.Point(799, 166);
+            this.transparentLabel3.Name = "transparentLabel3";
+            this.transparentLabel3.Size = new System.Drawing.Size(72, 13);
+            this.transparentLabel3.TabIndex = 51;
+            this.transparentLabel3.Text = "Target Health";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(951, 557);
-            this.Controls.Add(this.nudLatency);
+            this.Controls.Add(this.txtTargetHealth);
+            this.Controls.Add(this.transparentLabel3);
+            this.Controls.Add(this.txtPlayerPower);
+            this.Controls.Add(this.transparentLabel2);
+            this.Controls.Add(this.txtPlayerHealth);
             this.Controls.Add(this.transparentLabel1);
             this.Controls.Add(this.cmdClose);
             this.Controls.Add(this.cmdReloadRotationAndUI);
             this.Controls.Add(this.cmdReloadRotation);
             this.Controls.Add(this.txtTargetCasting);
-            this.Controls.Add(this.transparentLabel3);
-            this.Controls.Add(this.prgTargetHealth);
-            this.Controls.Add(this.transparentLabel12);
-            this.Controls.Add(this.transparentLabel11);
             this.Controls.Add(this.transparentLabel10);
             this.Controls.Add(this.transparentLabel7);
             this.Controls.Add(this.transparentLabel8);
@@ -663,8 +573,6 @@
             this.Controls.Add(this.transparentLabel5);
             this.Controls.Add(this.txtMouseXYClick);
             this.Controls.Add(this.txtMouseXY);
-            this.Controls.Add(this.prgPower);
-            this.Controls.Add(this.prgPlayerHealth);
             this.Controls.Add(this.cmdStartBot);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -684,14 +592,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudPulse)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudLatency)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button cmdStartBot;
         private System.Windows.Forms.Label lblHotkeyInfo;
         public System.Windows.Forms.TextBox txtTargetCasting;
         //private System.Windows.Forms.Button cmdDonate;
@@ -699,10 +605,7 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadRotationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem encryptCombatRoutineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hotkeysToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem spellbookToolStripMenuItem;
@@ -714,21 +617,14 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripMenuItem submitTicketToolStripMenuItem;
         internal System.Windows.Forms.RichTextBox rtbLog;
-        public ColorProgressBar.ColorProgressBar prgPlayerHealth;
-        public ColorProgressBar.ColorProgressBar prgPower;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.Button cmdRotationSettings;
-        private GUI.TransparentLabel transparentLabel3;
-        private GUI.TransparentLabel transparentLabel5;
-        private GUI.TransparentLabel transparentLabel6;
-        private GUI.TransparentLabel transparentLabel7;
-        private GUI.TransparentLabel transparentLabel8;
-        private GUI.TransparentLabel transparentLabel10;
-        private GUI.TransparentLabel transparentLabel11;
-        private GUI.TransparentLabel transparentLabel12;
-        public ColorProgressBar.ColorProgressBar prgTargetHealth;
+        private System.Windows.Forms.Label transparentLabel5;
+        private System.Windows.Forms.Label transparentLabel6;
+        private System.Windows.Forms.Label transparentLabel7;
+        private System.Windows.Forms.Label transparentLabel8;
+        private System.Windows.Forms.Label transparentLabel10;
         private System.Windows.Forms.ToolStripMenuItem imageToByteArrayToolStripMenuItem;
         private System.Windows.Forms.Button cmdReloadRotation;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
@@ -736,14 +632,16 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
         private System.Windows.Forms.Button cmdClose;
-        //private System.Windows.Forms.Button cmdDiscord;
-        private System.Windows.Forms.ToolStripMenuItem targetParty1ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem targetParty2ToolStripMenuItem;
-        private System.Windows.Forms.NumericUpDown nudLatency;
-        private GUI.TransparentLabel transparentLabel1;
         private System.Windows.Forms.ToolStripMenuItem licenseAgreementToolStripMenuItem;
-        //private System.Windows.Forms.Button cmd1;
-        //private System.Windows.Forms.Button cmd5;
+        private System.Windows.Forms.ToolStripMenuItem testingPixelsToolStripMenuItem;
+        public System.Windows.Forms.Button cmdStartBot;
+        private System.Windows.Forms.ToolStripMenuItem encryptCRToolStripMenuItem;
+        public System.Windows.Forms.TextBox txtPlayerHealth;
+        private System.Windows.Forms.Label transparentLabel1;
+        public System.Windows.Forms.TextBox txtPlayerPower;
+        private System.Windows.Forms.Label transparentLabel2;
+        public System.Windows.Forms.TextBox txtTargetHealth;
+        private System.Windows.Forms.Label transparentLabel3;
     }
 }
 

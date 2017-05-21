@@ -11,85 +11,137 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.CSharp;
+using CloudMagic.GUI.GUI;
 using CloudMagic.Helpers;
 using CloudMagic.Rotation;
 using static CloudMagic.Helpers.NativeMethods;
-using System.Runtime.InteropServices;
-using System.Speech.Synthesis;
+using Microsoft.CSharp;
+using System.Linq;
 
-// ReSharper disable once CheckNamespace
+// ReSharper disable ConvertIfStatementToConditionalTernaryExpression
+// ReSharper disable InvertIf
+// ReSharper disable ConvertIfStatementToSwitchStatement
+// ReSharper disable CheckNamespace
+#pragma warning disable 618
+
 namespace CloudMagic.GUI
 {
     public partial class frmMain : Form
     {
         internal static CombatRoutine combatRoutine;
         private readonly Dictionary<int, string> classes;
-        private KeyboardHook hook;
-        SelectWoWProcessToAttachTo frmSelect;
 
-        private static string Exe_Version => File.GetLastWriteTime(System.Reflection.Assembly.GetEntryAssembly().Location).ToString("yyyy.MM.dd");
-        
         private readonly int LocalVersion = int.Parse(Application.ProductVersion.Split('.')[0]);
+
+        private Process _process;
+        private SelectWoWProcessToAttachTo frmSelect;
+        private KeyboardHook hook;
+
+        #region Get GIT Version
+
+        private int _gitVersion;
+        
+        private int GitHubVersion
+        {
+            get
+            {
+                if (_gitVersion == 0)
+                {
+                    try
+                    {
+                        var versionInfo = Web.GetString("https://raw.githubusercontent.com/Scottishdwarf/CloudMagicBin/master/Properties/AssemblyInfo.cs").
+                            Split('\r').
+                            FirstOrDefault(r => r.Contains("AssemblyFileVersion"))?.
+                            Replace("\n", "").
+                            Replace("[assembly: AssemblyFileVersion(\"", "").
+                            Replace("\")]", "").
+                            Split('.')[0];
+
+                        if (versionInfo != null) _gitVersion = int.Parse(versionInfo);
+                    }
+                    catch
+                    {
+                        _gitVersion = 0;
+                    }
+                }
+                return _gitVersion;
+            }
+        }
+
+        #endregion
 
         internal frmMain()
         {
+            AutoScale = false;
+            AutoScaleMode = AutoScaleMode.None;
+
             InitializeComponent();
 
             classes = new Dictionary<int, string>
             {
-                { 1, "Warrior"},
-                { 2, "Paladin"},
-                { 3, "Hunter"},
-                { 4, "Rogue"},
-                { 5, "Priest"},
-                { 6, "DeathKnight"},
-                { 7, "Shaman"},
-                { 8, "Mage"},
-                { 9, "Warlock"},
-                { 10, "Monk"},
-                { 11, "Druid"},
-                { 12, "DemonHunter"}
+                {1, "Warrior"},
+                {2, "Paladin"},
+                {3, "Hunter"},
+                {4, "Rogue"},
+                {5, "Priest"},
+                {6, "DeathKnight"},
+                {7, "Shaman"},
+                {8, "Mage"},
+                {9, "Warlock"},
+                {10, "Monk"},
+                {11, "Druid"},
+                {12, "DemonHunter"}
             };
         }
 
-        private static string OperatingSystem
+        // ReSharper disable once AssignNullToNotNullAttribute
+        private static string Exe_Version => File.GetLastWriteTime(Assembly.GetEntryAssembly().Location).ToString("yyyy.MM.dd");
+
+        //private static string OperatingSystem
+        //{
+        //    get
+        //    {
+        //        var result = string.Empty;
+
+        //        var moc = new ManagementObjectSearcher(@"SELECT * FROM Win32_OperatingSystem ");
+        //        foreach (var managementBaseObject in moc.Get())
+        //        {
+        //            var o = (ManagementObject) managementBaseObject;
+        //            var x64 = Environment.Is64BitOperatingSystem ? "(x64)" : "(x86)";
+        //            result = $@"{o["Caption"]} {x64} Version {o["Version"]} SP {o["ServicePackMajorVersion"]}.{o["ServicePackMinorVersion"]}";
+        //            break;
+        //        }
+
+        //        return result.Replace("Microsoft", "").Trim();
+        //    }
+        //}
+
+        public Process process
         {
-            get
+            private get { return _process; }
+            set
             {
-                var result = string.Empty;
-
-                var moc = new ManagementObjectSearcher(@"SELECT * FROM Win32_OperatingSystem ");
-                foreach (var managementBaseObject in moc.Get())
-                {
-                    var o = (ManagementObject) managementBaseObject;
-                    var x64 = Environment.Is64BitOperatingSystem ? "(x64)" : "(x86)";
-                    result = $@"{o["Caption"]} {x64} Version {o["Version"]} SP {o["ServicePackMajorVersion"]}.{o["ServicePackMinorVersion"]}";
-                    break;
-                }
-
-                return result.Replace("Microsoft", "").Trim();
+                _process = value;
+                Log.Write("Process Id = " + value.Id);
             }
         }
 
-        
-
         private void frmMain_Load(object sender, EventArgs e)
-        {   
+        {
             toolStripStatusLabel1.Text = string.Format(toolStripStatusLabel1.Text, Exe_Version);
             toolStripStatusLabel3.Text = string.Format(toolStripStatusLabel3.Text, LocalVersion);
             frmSelect = new SelectWoWProcessToAttachTo(this);
 
-            prgPlayerHealth.Value = 0;
-            prgPower.Value = 0;
-            prgTargetHealth.Value = 0;
+            txtPlayerHealth.Text = "0";
+            txtPlayerPower.Text = "0";
+            txtTargetHealth.Text = "0";
 
             // Its annoying as hell when people use incorrect culture info, this will force it to use the correct number and date formats.
-            var ci = new CultureInfo("en-ZA") { DateTimeFormat = {ShortDatePattern = "yyyy/MM/dd"}, NumberFormat = { NumberDecimalSeparator = ".", CurrencyDecimalSeparator = "." } };
+            var ci = new CultureInfo("en-ZA") {DateTimeFormat = {ShortDatePattern = "yyyy/MM/dd"}, NumberFormat = {NumberDecimalSeparator = ".", CurrencyDecimalSeparator = "."}};
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
 
@@ -97,6 +149,47 @@ namespace CloudMagic.GUI
             Shown += FrmMain_Shown;
             Log.Initialize(rtbLog, this);
 
+            //Log.WriteCloudMagic("Welcome to CloudMagic developed by WiNiFiX", Color.Blue);
+            
+            float dx, dy;
+
+            var g = CreateGraphics();
+            try
+            {
+                dx = g.DpiX;
+                dy = g.DpiY;
+            }
+            finally
+            {
+                g.Dispose();
+            }
+
+            if (dx == dy && dx != 96)
+            {
+                Log.WriteNoTime($"DPI = {dx}");
+            }
+
+            if (dx != dy)
+            {
+                Log.WriteNoTime($"DPI (x, y) = ({dx},{dy})");
+                Log.WriteNoTime("Please ensure that DPI Scaling on X = DPI Scaling on Y Axis of monitor", Color.Red);
+            }
+            if (dx != 96)
+            {
+                Log.WriteNoTime("Please ensure that DPI Scaling is set to 96 DPI or 100%", Color.Red);
+            }
+                        
+            Log.Write("Latest version: " + GitHubVersion);
+            Log.Write("Current version: " + LocalVersion);
+
+            if (GitHubVersion > LocalVersion)
+            {
+                MessageBox.Show("Please note you are not running the latest version of the bot, please update it.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Application.Exit();
+            }
+
+            Log.WriteNoTime("To view a sample rotation see the file: " + Application.StartupPath + "\\Rotations\\Druid\\Druid-Balance-Scotishdwarf.cs", Color.Gray);
+            
             Log.WriteNoTime("Should you encounter rotation issues at low health ensure that flashy red screen is turned off in interface options.", Color.Green);
 
             var processName = Process.GetCurrentProcess().ProcessName.ToUpper();
@@ -116,48 +209,61 @@ namespace CloudMagic.GUI
             {
                 var code = sr.ReadToEnd();
 
+                Log.Write($"Loading file [{fileName}]...", Color.Black);
+
+                //if (fileName.EndsWith(".enc"))
+                //{
+                //    Log.Write("Decrypting profile...", Color.Black);
+
+                //    try
+                //    {
+                //        code = Encryption.Decrypt(code);
+
+                //        Log.Write("Profile has been decrypted successfully", Color.Green);
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Write(ex.Message, Color.Red);
+                //    }
+                //}
+
                 if (code.Trim() == "")
                 {
                     MessageBox.Show("Please select a non blank file", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
-                if (fileName.EndsWith(".enc"))
+                if (code.ToLower().Contains("class detectkeypress"))
                 {
-                    Log.Write("Decrypting profile...", Color.Black);
-
-                    try
-                    {
-                        code = Encryption.Decrypt(code);
-
-                        if (Debugger.IsAttached)
-                        {
-                            StreamWriter sw =  new StreamWriter(fileName.Replace(".enc", ".cs"));
-                            sw.Write(code);
-                            sw.Flush();
-                            sw.Close();
-                        }
-
-                        Log.Write("Profile has been decrypted successfully", Color.Green);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Write(ex.Message, Color.Red);
-                    }
+                    MessageBox.Show("DetectKeyPress is already built into CloudMagic, please dont re-create the wheel.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
 
-                Log.Write($"Compiling profile [{fileName}]...", Color.Black);
+                if (code.ToLower().Contains("wow.speak("))
+                {
+                    MessageBox.Show("WoW.Speak() is no longer allowed in custom rotations.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+
+                //if (code.Contains("System.IO"))
+                //{
+                //    MessageBox.Show("using System.IO; is no longer allowed in custom rotations, no IO is needed other than Config Saving which you can already do.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    return false;
+                //}
+
+                Log.Write($"Compiling file [{fileName}]...", Color.Black);
 
                 var provider = new CSharpCodeProvider();
                 var parameters = new CompilerParameters();
-
-                parameters.ReferencedAssemblies.Add("System.Windows.Forms.dll"); // For Windows Forms use
-                parameters.ReferencedAssemblies.Add("System.Drawing.dll"); // For System.Drawing.Point and System.Drawing.Color use
+                                
+                parameters.ReferencedAssemblies.Add("System.Windows.Forms.dll"); 
+                parameters.ReferencedAssemblies.Add("System.Drawing.dll"); 
                 parameters.ReferencedAssemblies.Add("System.Data.dll");
                 parameters.ReferencedAssemblies.Add("System.Xml.dll");
                 parameters.ReferencedAssemblies.Add("System.Linq.dll");
                 parameters.ReferencedAssemblies.Add("System.dll");
                 parameters.ReferencedAssemblies.Add("System.IO.dll");
+                parameters.ReferencedAssemblies.Add("System.Core.dll");
                 parameters.ReferencedAssemblies.Add("System.Threading.dll");
                 parameters.ReferencedAssemblies.Add(Application.ExecutablePath);
                 parameters.GenerateInMemory = true;
@@ -168,7 +274,7 @@ namespace CloudMagic.GUI
                 if (results.Errors.HasErrors)
                 {
                     foreach (CompilerError error in results.Errors)
-                    {                        
+                    {
                         Log.Write($"Error on line [{error.Line}] - ({error.ErrorNumber}): {error.ErrorText}", Color.Red);
                     }
 
@@ -182,17 +288,16 @@ namespace CloudMagic.GUI
                     if (t.IsClass)
                     {
                         var obj = Activator.CreateInstance(t);
-                        combatRoutine = (CombatRoutine)obj;
+                        combatRoutine = (CombatRoutine) obj;
 
                         combatRoutine.Load(this);
                         combatRoutine.FileName = fileName;
 
                         Log.Write("Successfully loaded combat routine: " + combatRoutine.Name, Color.Green);
-                        
+
                         if (SpellBook.Initialize(fileName, reloadUI))
                         {
                             spellbookToolStripMenuItem.Enabled = true;
-                            submitTicketToolStripMenuItem.Enabled = true;
 
                             cmdStartBot.Enabled = true;
                             cmdStartBot.BackColor = Color.LightGreen;
@@ -204,7 +309,6 @@ namespace CloudMagic.GUI
                         }
 
                         spellbookToolStripMenuItem.Enabled = false;
-                        submitTicketToolStripMenuItem.Enabled = false;
 
                         cmdStartBot.Enabled = false;
                         cmdStartBot.BackColor = Color.WhiteSmoke;
@@ -250,7 +354,7 @@ namespace CloudMagic.GUI
             hook.KeyPressed += Hook_KeyPressed;
 
             MouseHook.MouseClick += MouseHook_MouseClick;
-            
+
             if (ConfigFile.ReadValue("Hotkeys", "cmbStartRotationKey") != "")
             {
                 hook.RegisterHotKey(Keyboard.StartRotationModifierKey, Keyboard.StartRotationKey, "Start Rotation");
@@ -282,21 +386,6 @@ namespace CloudMagic.GUI
             txtMouseXYClick.Text = $"{e.X}, {e.Y}";
         }
 
-        private Process _process;
-
-        public Process process
-        {
-            get
-            {
-                return _process;
-            }
-            set
-            {
-                _process = value;
-                Log.Write("Process Id = " + value.Id);
-            }
-        }
-
         private void FrmMain_Shown(object sender, EventArgs e)
         {
             try
@@ -312,14 +401,15 @@ namespace CloudMagic.GUI
                 if (!ConfigFile.LicenseAccepted)
                     Close();
 
-                chkDisableOverlay.Checked = ConfigFile.DisableOverlay; 
+                chkDisableOverlay.Checked = ConfigFile.DisableOverlay;
                 chkDisableOverlay_CheckedChanged(null, null);
 
-                Log.Write(OperatingSystem);
+                //Log.Write(OperatingSystem);
 
                 if (GameDVR.IsAppCapturedEnabled || GameDVR.IsGameDVREnabled)
                 {
-                    DialogResult dialogResult = MessageBox.Show("Game DVR is currently ENABLED on this machine. Would you like to disable it? CloudMagic will NOT function correctly with it enabled.", "DisableGameDVR", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var dialogResult = MessageBox.Show("Game DVR is currently ENABLED on this machine. Would you like to disable it? CloudMagic will NOT function correctly with it enabled.",
+                        "DisableGameDVR", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (dialogResult == DialogResult.Yes)
                     {
@@ -337,52 +427,46 @@ namespace CloudMagic.GUI
                 {
                     Log.Write("GameDVR is disabled in Xbox app", Color.Green);
                 }
-                                
+
                 var i = 0;
                 foreach (var screen in Screen.AllScreens)
                 {
                     i++;
                     Log.Write($"Screen [{i}] - depth: {screen.BitsPerPixel}bit - resolution: {screen.Bounds.Width}x{screen.Bounds.Height}");
                 }
-                
+
                 foreach (var item in classes)
                 {
                     if (!Directory.Exists(Application.StartupPath + "\\Rotations\\" + item.Value))
                         Directory.CreateDirectory(Application.StartupPath + "\\Rotations\\" + item.Value);
                 }
-
-                nudLatency.Value = ConfigFile.Latency;
                 
-                Log.Write($"Latency set to: {nudLatency.Value}ms");
-                Log.Write($"Addon Latency set to: {ConfigFile.LatencyForAddon}");
-
                 nudPulse.Value = ConfigFile.Pulse;
 
-                checkForUpdatesToolStripMenuItem.PerformClick();
+                //if (!Debugger.IsAttached)
+                //{
+                    frmSelect.ShowDialog();
+                //}
+                //else
+                //{
+                //    process = Process.GetProcessesByName("Wow-64").FirstOrDefault();
+                //}
 
-                frmSelect.ShowDialog();
-                
                 if (process == null)
                 {
                     Close();
                 }
-                
+
                 ReloadHotkeys();
 
-                WoW.Initialize(process);                                               
+                WoW.Initialize(process);
 
                 Log.Write("WoW Path: " + WoW.InstallPath, Color.Gray);
                 Log.Write("AddOn Path: " + WoW.AddonPath, Color.Gray);
 
-                if (!Directory.Exists(Path.Combine(WoW.AddonPath, "HideOrderHallBar")))
-                {
-                    MessageBox.Show("Please ensure you have installed the 'HideOrderHallBar' addon", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
                 var hwnd = WoW.Process.MainWindowHandle;
 
-                Rectangle myRect = new Rectangle();
+                var myRect = new Rectangle();
 
                 RECT rct;
 
@@ -390,14 +474,14 @@ namespace CloudMagic.GUI
                 {
                     MessageBox.Show("Unable to find wow resolution from exe, please ensure WoW is running.", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }                
+                }
 
                 myRect.X = rct.Left;
                 myRect.Y = rct.Top;
                 myRect.Width = rct.Right - rct.Left + 1;
                 myRect.Height = rct.Bottom - rct.Top + 1;
 
-                Log.Write($"Current WoW Resolution is '{(myRect.Width - 1)}x{(myRect.Height - 1)}'");
+                Log.Write($"Current WoW Resolution is '{myRect.Width - 1}x{myRect.Height - 1}'");
 
                 if (myRect.Width != 1921 || myRect.Height != 1081)
                 {
@@ -408,14 +492,12 @@ namespace CloudMagic.GUI
                     }
                     else
                     {
-                        MessageBox.Show("Please ensure you are running wow in 1920x1080 resolutions, others are not supported.", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Log.Write($"Current WoW Resolution is '{(myRect.Width - 1)}x{(myRect.Height - 1)}' only 1920x1080 is supported", Color.Red);
-                        return;
+                        MessageBox.Show("Please ensure you are running wow in 1920x1080 or 2560x1080 resolutions, others are not supported.", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.Write($"Current WoW Resolution is '{myRect.Width - 1}x{myRect.Height - 1}' only 1920x1080 or 2560x1080 is supported", Color.Red);                        
                     }
-                    
                 }
 
-                var mousePos = new Thread(delegate ()
+                var mousePos = new Thread(delegate()
                 {
                     while (true)
                     {
@@ -423,10 +505,9 @@ namespace CloudMagic.GUI
                         Thread.Sleep(10);
                     }
                     // ReSharper disable once FunctionNeverReturns
-                })
-                { IsBackground = true };
+                }) {IsBackground = true};
                 mousePos.Start();
-                                
+
                 Log.DrawHorizontalLine();
                 Log.Write("Please select a rotation to load from 'File' -> 'Load Rotation...'", Color.Green);
                 Log.Write("Please note that you can only start a bot, or setup the spellbook, once you have loaded a rotation", Color.Black);
@@ -441,28 +522,26 @@ namespace CloudMagic.GUI
                     Log.Write("Failed to load profile, please select a valid file.", Color.Red);
                 }
 
-                //// For testing only
-                //if (!Debugger.IsAttached)
-                //    return;
+                // For testing only
+                if (!Debugger.IsAttached)
+                    // ReSharper disable once RedundantJumpStatement
+                    return;
 
-                //var rot = new Warrior();
+                //var rot = new WindwalkerMonk();
                 //rot.Load(this);
                 //combatRoutine = rot.combatRoutine;
-                //combatRoutine.FileName = Application.StartupPath + @"\Rotations\Warrior\Warrior.cs";
-                //Log.Write("Successfully loaded combat routine: " + combatRoutine.Name, Color.Green);
-                //Overlay.showOverlay(new Point(20, 680));
-                //if (SpellBook.Initialize(Application.StartupPath + @"\Rotations\Warrior\Warrior.cs"))
+                //combatRoutine.FileName = Application.StartupPath + @"\Rotations\Monk\Monk-Windwalker-Mixo.cs";
+                //Log.Write("Successfully loaded combat routine: " + combatRoutine.Name, Color.Green);                
+                //if (SpellBook.Initialize(Application.StartupPath + @"\Rotations\Monk\Monk-Windwalker-Mixo.cs"))
                 //{
-                //    spellbookToolStripMenuItem.Enabled = true;
-                //    submitTicketToolStripMenuItem.Enabled = true;
+                //    spellbookToolStripMenuItem.Enabled = true;                    
                 //    cmdStartBot.Enabled = true;
                 //    cmdStartBot.BackColor = Color.LightGreen;
                 //    cmdRotationSettings.Enabled = true;
                 //}
                 //else
                 //{
-                //    spellbookToolStripMenuItem.Enabled = false;
-                //    submitTicketToolStripMenuItem.Enabled = false;
+                //    spellbookToolStripMenuItem.Enabled = false;                    
                 //    cmdStartBot.Enabled = false;
                 //    cmdStartBot.BackColor = Color.WhiteSmoke;
                 //}
@@ -519,7 +598,7 @@ namespace CloudMagic.GUI
                             combatRoutine.ChangeType(CombatRoutine.RotationType.SingleTargetCleave);
                             return;
                         }
-                        
+
                         combatRoutine.ChangeType(CombatRoutine.RotationType.SingleTarget);
                     }
                 }
@@ -547,7 +626,7 @@ namespace CloudMagic.GUI
                     }
                 }
             }
-            else  // If defaults are not setup, then use these as defaults
+            else // If defaults are not setup, then use these as defaults
             {
                 if (e.Modifier == Helpers.ModifierKeys.Ctrl)
                 {
@@ -588,7 +667,7 @@ namespace CloudMagic.GUI
             if (combatRoutine.State == CombatRoutine.RotationState.Stopped)
             {
                 combatRoutine.Start();
-                WoW.Speak("Starting Rotation");
+                WoW.Speak("Start");
 
                 if (combatRoutine.State != CombatRoutine.RotationState.Running) return;
 
@@ -597,19 +676,16 @@ namespace CloudMagic.GUI
             }
             else
             {
-                WoW.Speak("Stopping Rotation");
+                WoW.Speak("Stop");
                 combatRoutine.Pause();
                 cmdStartBot.Text = "Start rotation";
-                cmdStartBot.BackColor = Color.LightGreen;                
+                cmdStartBot.BackColor = Color.LightGreen;
             }
         }
 
         //private void cmdDonate_Click(object sender, EventArgs e)
         //{
-        //    // 1 $
-        //    Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CPDNWHKSVWGKA");
-        //    // 5 $
-        //    //Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PM3737J8GG7BG");
+        //    Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PM3737J8GG7BG");
         //}
 
         private void loadRotationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -619,11 +695,7 @@ namespace CloudMagic.GUI
                 combatRoutine?.Pause();
             }
 
-            var fileBrowser = new OpenFileDialog
-            {
-                Filter = "CS (*.cs)|*.cs|ENC (*.enc)|*.enc",
-                InitialDirectory = Application.StartupPath + "\\Rotations"
-            };
+            var fileBrowser = new OpenFileDialog {Filter = "CS (*.cs)|*.cs|ENC (*.enc)|*.enc", InitialDirectory = Application.StartupPath + "\\Rotations"};
             var res = fileBrowser.ShowDialog();
 
             if (res == DialogResult.OK)
@@ -638,7 +710,7 @@ namespace CloudMagic.GUI
                     ConfigFile.WriteValue("CloudMagic", "LastProfile", fileBrowser.FileName);
                 }
             }
-        }        
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -648,73 +720,6 @@ namespace CloudMagic.GUI
             }
 
             Application.Exit();
-        }
-
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Debugger.IsAttached)
-                return;
-
-            // Check versions                               
-            Log.Write("Checking for updates...");
-
-            Log.Write("Latest GitHub version: " + GitHubVersion);
-            Log.Write("Current version: " + LocalVersion);
-
-            if (GitHubVersion > LocalVersion)
-            {
-                Log.Write("Please note you are not running the latest version of the bot, please update it.", Color.Black);
-                MessageBox.Show("Please note you are not running the latest version of the bot, please update it.\r\nThe application will now exit.", "CloudMagic", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
-        }
-
-        private void encryptCombatRoutineToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ConfigFile.LastRotation.EndsWith(".enc"))
-            {
-                Log.Write("The currently selected routine is already encrypted", Color.Red);
-                return;
-            }
-
-            if (ConfigFile.LastRotation != "")
-            {
-                try
-                {
-                    string rotationSource;
-
-                    using (var sr = new StreamReader(ConfigFile.LastRotation))
-                    {
-                        var contents = sr.ReadToEnd();
-
-                        var line1 = contents.Split('\r')[0].Trim();
-
-                        if (!line1.Contains("@"))
-                        {
-                            throw new Exception("You are not permitted to encrypt a combat routine if you have not yet specified an email address on the top line of the routine");
-                        }
-
-                        rotationSource = Encryption.Encrypt(contents);
-                    }
-
-                    using (var sw = new StreamWriter(ConfigFile.LastRotation.Replace(".cs", ".enc")))
-                    {
-                        sw.Write(rotationSource);
-                        sw.Flush();
-                    }
-
-                    Log.Write("File has beem encrypted successfully.", Color.Green);
-                    Log.Write("Encrypted name: " + ConfigFile.LastRotation.Replace(".cs", ".enc"), Color.Green);
-                }
-                catch (Exception ex)
-                {
-                    Log.Write(ex.Message, Color.Red);
-                }
-            }
-            else
-            {
-                Log.Write("Please load a rotation so that I know which rotation to encrypt.", Color.Red);
-            }
         }
 
         private void hotkeysToolStripMenuItem_Click(object sender, EventArgs e)
@@ -743,79 +748,24 @@ namespace CloudMagic.GUI
             combatRoutine?.ForcePulseUpdate();
         }
 
-        #region Get GIT Version
-
-        private int _gitVersion;
-
-        private int GitHubVersion
-        {
-            get
-            {
-                if (_gitVersion == 0)
-                {
-                    try
-                    {
-                        var versionInfo = Web.GetString("https://raw.githubusercontent.com/winifix/CloudMagic/master/CloudMagic/Properties/AssemblyInfo.cs").
-                            Split('\r').
-                            FirstOrDefault(r => r.Contains("AssemblyFileVersion"))?.
-                            Replace("\n", "").
-                            Replace("[assembly: AssemblyFileVersion(\"", "").
-                            Replace("\")]", "").
-                            Split('.')[0];
-
-                        if (versionInfo == null)
-                        {
-                            throw new Exception();
-                        }
-
-                        if (versionInfo != null) _gitVersion = int.Parse(versionInfo);
-                    }
-                    catch
-                    {
-                        Log.Write("Unable to determine GitHub version", Color.Red);
-                        Log.Write("Please ensure internet connectivity is working...", Color.Red);
-                        _gitVersion = 0;
-                    }
-                }
-                return _gitVersion;
-            }
-        }
-
-        #endregion
-
         private void reloadAddonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Debugger.IsAttached)
-                WoW.SendMacro("/console scriptErrors 1");   // Show wow Lua errors
-
             WoW.SendMacro("/reload");
         }
 
         private void rtbLog_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-
-        }
-
-        private void submitTicketToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var f = new frmSubmitTicket(rtbLog.Text);
-            f.ShowDialog();
-        }
-
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void cmdRotationSettings_Click(object sender, EventArgs e)
         {
             try
             {
+                combatRoutine.SettingsForm.StartPosition = FormStartPosition.CenterParent;
                 combatRoutine.SettingsForm.ShowDialog();
             }
             catch
@@ -824,34 +774,13 @@ namespace CloudMagic.GUI
             }
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void txtTargetCasting_TextChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void txtTargetHealth_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void imageToByteArrayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var f = new GUI.frmImageToByteArray();
+            var f = new frmImageToByteArray();
             f.ShowDialog();
         }
 
@@ -878,7 +807,7 @@ namespace CloudMagic.GUI
                 Log.Write("Failed to load profile, please select a valid file.", Color.Red);
                 return;
             }
-            
+
             // Then start the bot if it was running
             if (currentRotationState == CombatRoutine.RotationState.Running)
             {
@@ -906,42 +835,64 @@ namespace CloudMagic.GUI
             Application.ExitThread();
         }
 
-        private void cmdDiscord_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://discord.gg/0rnM62Wx5pQp8tjT");
-        }
-
-        private void targetParty1ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WoW.TargetPartyMember(1);
-        }
-
-        private void targetParty2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            WoW.TargetPartyMember(2);
-        }
-
-        private void nudLatency_ValueChanged(object sender, EventArgs e)
-        {
-            ConfigFile.Latency = nudLatency.Value;
-        }
-
         private void licenseAgreementToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var f = new frmLicenseAgreement();
             f.ShowDialog();
         }
 
-        private void cmd1_Click(object sender, EventArgs e)
+        private void testingPixelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // $ 1
-            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CPDNWHKSVWGKA");
+            var f = new Testing_Pixels();
+            f.Show();
         }
 
-        private void cmd5_Click(object sender, EventArgs e)
+        private void encryptCRToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // $ 5
-            Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PM3737J8GG7BG");
+            //if (ConfigFile.LastRotation.EndsWith(".enc"))
+            //{
+            //    Log.Write("The currently selected routine is already encrypted", Color.Red);
+            //    return;
+            //}
+
+            //if (ConfigFile.LastRotation != "")
+            //{
+            //    try
+            //    {
+            //        string rotationSource;
+
+            //        using (var sr = new StreamReader(ConfigFile.LastRotation))
+            //        {
+            //            var contents = sr.ReadToEnd();
+
+            //            var line1 = contents.Split('\r')[0].Trim();
+
+            //            if (!line1.Contains("@"))
+            //            {
+            //                throw new Exception("You are not permitted to encrypt a combat routine if you have not yet specified an email address on the top line of the routine");
+            //            }
+
+            //            rotationSource = Encryption.Encrypt(contents);
+            //        }
+
+            //        using (var sw = new StreamWriter(ConfigFile.LastRotation.Replace(".cs", ".enc")))
+            //        {
+            //            sw.Write(rotationSource);
+            //            sw.Flush();
+            //        }
+
+            //        Log.Write("File has beem encrypted successfully.", Color.Green);
+            //        Log.Write("Encrypted name: " + ConfigFile.LastRotation.Replace(".cs", ".enc"), Color.Green);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Log.Write(ex.Message, Color.Red);
+            //    }
+            //}
+            //else
+            //{
+            //    Log.Write("Please load a rotation so that I know which rotation to encrypt.", Color.Red);
+            //}
         }
     }
 }

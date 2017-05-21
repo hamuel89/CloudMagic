@@ -30,15 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupHotkeys));
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbStartRotationModifierKey = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.cmbStartRotationKey = new System.Windows.Forms.ComboBox();
-            this.cmbStopRotationKey = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.cmbStopRotationModifierKey = new System.Windows.Forms.ComboBox();
             this.cmbSingleTargetKey = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.cmbSingleTargetModifierKey = new System.Windows.Forms.ComboBox();
@@ -46,6 +42,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.cmbAOEModifierKey = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmdSave = new System.Windows.Forms.Button();
             this.cmdDefaults = new System.Windows.Forms.Button();
@@ -58,18 +55,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(11, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.Size = new System.Drawing.Size(99, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Start Rotation";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 58);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Stop Rotation";
+            this.label1.Text = "Start/Stop Rotation";
             // 
             // label3
             // 
@@ -95,7 +83,8 @@
             this.cmbStartRotationModifierKey.Items.AddRange(new object[] {
             "Ctrl",
             "Alt",
-            "Shift"});
+            "Shift",
+            "None"});
             this.cmbStartRotationModifierKey.Location = new System.Drawing.Point(157, 28);
             this.cmbStartRotationModifierKey.Name = "cmbStartRotationModifierKey";
             this.cmbStartRotationModifierKey.Size = new System.Drawing.Size(85, 21);
@@ -115,6 +104,7 @@
             // 
             this.cmbStartRotationKey.FormattingEnabled = true;
             this.cmbStartRotationKey.Items.AddRange(new object[] {
+            "None",
             "A",
             "B",
             "C",
@@ -156,74 +146,6 @@
             this.cmbStartRotationKey.Size = new System.Drawing.Size(85, 21);
             this.cmbStartRotationKey.TabIndex = 6;
             this.cmbStartRotationKey.Text = "S";
-            // 
-            // cmbStopRotationKey
-            // 
-            this.cmbStopRotationKey.FormattingEnabled = true;
-            this.cmbStopRotationKey.Items.AddRange(new object[] {
-            "A",
-            "B",
-            "C",
-            "D",
-            "E",
-            "F",
-            "G",
-            "H",
-            "I",
-            "J",
-            "K",
-            "L",
-            "M",
-            "N",
-            "O",
-            "P",
-            "Q",
-            "R",
-            "S",
-            "T",
-            "U",
-            "V",
-            "W",
-            "X",
-            "Y",
-            "Z",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "0"});
-            this.cmbStopRotationKey.Location = new System.Drawing.Point(267, 55);
-            this.cmbStopRotationKey.Name = "cmbStopRotationKey";
-            this.cmbStopRotationKey.Size = new System.Drawing.Size(85, 21);
-            this.cmbStopRotationKey.TabIndex = 9;
-            this.cmbStopRotationKey.Text = "S";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(189, 58);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(13, 13);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "+";
-            // 
-            // cmbStopRotationModifierKey
-            // 
-            this.cmbStopRotationModifierKey.FormattingEnabled = true;
-            this.cmbStopRotationModifierKey.Items.AddRange(new object[] {
-            "Ctrl",
-            "Alt",
-            "Shift"});
-            this.cmbStopRotationModifierKey.Location = new System.Drawing.Point(157, 55);
-            this.cmbStopRotationModifierKey.Name = "cmbStopRotationModifierKey";
-            this.cmbStopRotationModifierKey.Size = new System.Drawing.Size(85, 21);
-            this.cmbStopRotationModifierKey.TabIndex = 7;
-            this.cmbStopRotationModifierKey.Text = "Ctrl";
             // 
             // cmbSingleTargetKey
             // 
@@ -286,7 +208,8 @@
             this.cmbSingleTargetModifierKey.Items.AddRange(new object[] {
             "Ctrl",
             "Alt",
-            "Shift"});
+            "Shift",
+            "None"});
             this.cmbSingleTargetModifierKey.Location = new System.Drawing.Point(157, 27);
             this.cmbSingleTargetModifierKey.Name = "cmbSingleTargetModifierKey";
             this.cmbSingleTargetModifierKey.Size = new System.Drawing.Size(85, 21);
@@ -354,7 +277,8 @@
             this.cmbAOEModifierKey.Items.AddRange(new object[] {
             "Ctrl",
             "Alt",
-            "Shift"});
+            "Shift",
+            "None"});
             this.cmbAOEModifierKey.Location = new System.Drawing.Point(157, 54);
             this.cmbAOEModifierKey.Name = "cmbAOEModifierKey";
             this.cmbAOEModifierKey.Size = new System.Drawing.Size(85, 21);
@@ -365,18 +289,24 @@
             // 
             this.groupBox1.Controls.Add(this.cmbStartRotationModifierKey);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.cmbStartRotationKey);
-            this.groupBox1.Controls.Add(this.cmbStopRotationModifierKey);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.cmbStopRotationKey);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(414, 100);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Rotation Hotkeys";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(248, 31);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(13, 13);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "+";
             // 
             // groupBox2
             // 
@@ -440,15 +370,11 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbStartRotationModifierKey;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox cmbStartRotationKey;
-        private System.Windows.Forms.ComboBox cmbStopRotationKey;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cmbStopRotationModifierKey;
         private System.Windows.Forms.ComboBox cmbSingleTargetKey;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cmbSingleTargetModifierKey;
@@ -459,5 +385,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button cmdSave;
         private System.Windows.Forms.Button cmdDefaults;
+        private System.Windows.Forms.Label label6;
     }
 }

@@ -14,7 +14,7 @@ namespace CloudMagic.GUI
 {
     public partial class SelectWoWProcessToAttachTo : Form
     {
-        private frmMain parent;
+        private readonly frmMain parent;
 
         public SelectWoWProcessToAttachTo(frmMain parent)
         {
@@ -26,6 +26,7 @@ namespace CloudMagic.GUI
         {
             cmbWoW.Items.Clear();
             
+
             var processes = Process.GetProcessesByName("Wow");
 
             foreach (var process in processes)
@@ -39,7 +40,7 @@ namespace CloudMagic.GUI
             {
                 cmbWoW.Items.Add($"WoW x64 [Live] => {process.Id}");
             }
-
+            
             processes = Process.GetProcessesByName("WowB-64");
 
             foreach (var process in processes)
@@ -67,7 +68,7 @@ namespace CloudMagic.GUI
                 cmbWoW.Enabled = false;
                 cmdConnect.Enabled = false;
             }
-
+            
             foreach (var fileName in Directory.GetFiles(Application.StartupPath + "\\Rotations", "*.*", SearchOption.AllDirectories))
             {
                 cmbRotation.Items.Add(fileName.Replace(Application.StartupPath + "\\Rotations", "").Substring(1));
@@ -81,11 +82,13 @@ namespace CloudMagic.GUI
                 {
                     lastRotation = lastRotation.Replace(Application.StartupPath + "\\Rotations", "").Substring(1);
 
+                    cmbClass.Text = lastRotation.Split('\\')[0];
                     cmbRotation.Text = lastRotation;
                 }
                 else
                 {
-                    cmbRotation.SelectedIndex = 0;
+                    if (cmbClass.Text != "")
+                        cmbRotation.SelectedIndex = 0;
                 }
                 
                 cmbRotation.Enabled = true;
@@ -150,6 +153,19 @@ namespace CloudMagic.GUI
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void cmbClass_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cmbRotation.Items.Clear();
+            foreach (var fileName in Directory.GetFiles(Application.StartupPath + $"\\Rotations\\{cmbClass.Text.Trim()}\\", "*.cs", SearchOption.AllDirectories)) 
+            {
+                cmbRotation.Items.Add(fileName.Replace(Application.StartupPath + "\\Rotations\\", ""));
+            }
+            foreach (var fileName in Directory.GetFiles(Application.StartupPath + $"\\Rotations\\{cmbClass.Text.Trim()}\\", "*.enc", SearchOption.AllDirectories))
+            {
+                cmbRotation.Items.Add(fileName.Replace(Application.StartupPath + "\\Rotations\\", ""));
+            }
         }
     }
 }

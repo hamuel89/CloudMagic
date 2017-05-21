@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace CloudMagic.GUI.GUI
+namespace PixelMagic.GUI.GUI
 {
     public class TransparentLabel : Control
     {
