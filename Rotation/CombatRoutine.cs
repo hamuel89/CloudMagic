@@ -44,7 +44,6 @@ namespace CloudMagic.Rotation
         public CombatRoutine combatRoutine;
         private Thread mainThread;
 
-        private bool messageShown;
         private frmMain parent;
 
         private readonly ManualResetEvent pause = new ManualResetEvent(false);
@@ -71,9 +70,9 @@ namespace CloudMagic.Rotation
             {
                 pause.WaitOne();
 
-                Threads.UpdateProgressBar2(parent.prgPlayerHealth, WoW.HealthPercent);
-                Threads.UpdateProgressBar2(parent.prgPower, WoW.Power);
-                Threads.UpdateProgressBar2(parent.prgTargetHealth, WoW.TargetHealthPercent);
+                Threads.UpdateTextBox(parent.txtPlayerHealth, WoW.HealthPercent.ToString());
+                Threads.UpdateTextBox(parent.txtPlayerPower, WoW.Power.ToString());
+                Threads.UpdateTextBox(parent.txtTargetHealth, WoW.TargetHealthPercent.ToString());
                 Threads.UpdateTextBox(parent.txtTargetCasting, WoW.TargetIsCasting.ToString());
 
                 Thread.Sleep(500);
@@ -92,7 +91,7 @@ namespace CloudMagic.Rotation
                     var key = GetAsyncKeyState(Keys.LShiftKey);
                     if ((key & 0x8000) != 0)
                     {
-                        //Log.Write("Rotation Resumed!");
+                        // Pause rotation when left shift is down
                     }
                     else
                     {
@@ -155,12 +154,12 @@ namespace CloudMagic.Rotation
                 if (State == RotationState.Stopped)
                 {
                     Log.Write("Starting bot...", Color.Green);
-
-                    //if (WoW.pWow == null)
-                    //{
-                    //    Log.Write("World of warcraft is not detected / running, please login before attempting to restart the bot", Color.Red);
-                    //    return;
-                    //}
+                    
+                    if (WoW.Process == null)
+                    {
+                        Log.Write("World of warcraft is not detected / running, please login before attempting to restart the bot", Color.Red);
+                        return;
+                    }
 
                     pause.Set();
 
@@ -204,20 +203,37 @@ namespace CloudMagic.Rotation
 
         public void ChangeType(RotationType rotationType)
         {
-            if (_rotationType != rotationType)
+            if (_rotationType == rotationType) return;
+
+            _rotationType = rotationType;
+
+            Log.Write("Rotation type: " + rotationType);
+
+            WoW.Speak(rotationType.ToString());
+
+            if (ConfigFile.PlayErrorSounds)
             {
-                _rotationType = rotationType;
+                SystemSounds.Beep.Play();
+            }
 
-                Log.Write("Rotation type: " + rotationType);
+            Overlay.updateLabels();
+        }
 
-                WoW.Speak(rotationType.ToString());
+        private bool useCooldowns;
 
-                if (ConfigFile.PlayErrorSounds)
-                {
-                    SystemSounds.Beep.Play();
-                }
+        public bool UseCooldowns
+        {
+            get
+            {
+                return useCooldowns;
+            }
+            set
+            {
+                useCooldowns = value;
 
-                Overlay.updateLabels();
+                Log.Write("UseCooldowns = " + value);
+
+                Overlay.UpdateLabelsCooldowns();
             }
         }
 

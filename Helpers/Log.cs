@@ -281,7 +281,7 @@ namespace CloudMagic.Helpers
         }
 
         public static void Write(Color color, string format, params object[] args)
-        {
+        {            
             _parent.Invoke(
                 new Action(() =>
                 {
@@ -294,19 +294,10 @@ namespace CloudMagic.Helpers
         {
         }
 
-        private static void InternalWrite(Color color, string text, bool noTime = false, bool lineFeed = true,
-            bool noSound = false)
+        private static void InternalWrite(Color color, string text, bool noTime = false, bool lineFeed = true, bool noSound = false)
         {
             try
             {
-                if (color == Color.Red && ConfigFile.PlayErrorSounds)
-                {
-                    if (!noSound)
-                    {
-                        SystemSounds.Hand.Play();
-                    }
-                }
-
                 var rtb = _rtbLogWindow;
 
                 rtb.SuspendLayout();
@@ -314,6 +305,12 @@ namespace CloudMagic.Helpers
                 if (rtb.Lines.Length > 2000 && _clearHistory)
                 {
                     rtb.Clear();
+                }
+
+                if (text.ToLower().Contains("http"))
+                {
+                    color = Color.Red;
+                    text = "[URL Links not permitted in Log Window, please keep these on your settings form.]";
                 }
 
                 rtb.SelectionStart = rtb.Text.Length;

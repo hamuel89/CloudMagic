@@ -58,9 +58,9 @@ namespace CloudMagic.Helpers
             return Load(reloadUI);
         }
 
-        public static void AddSpell(NumericUpDown spellId, TextBox spellName, ComboBox keyBind)
+        public static void AddSpell(NumericUpDown spellId, TextBox spellName, Keys key)
         {
-            AddSpell(int.Parse(spellId.Value.ToString()), spellName.Text, keyBind.Text);
+            AddSpell(int.Parse(spellId.Value.ToString()), spellName.Text, key.ToString());
         }
 
         public static void UpdateSpellsFromDataTable()
@@ -253,12 +253,12 @@ namespace CloudMagic.Helpers
             {
                 var fileContents = sr.ReadToEnd();
 
-                var encrypted = (FullRotationFilePath.EndsWith(".enc"));
+                //var encrypted = (FullRotationFilePath.EndsWith(".enc"));
 
-                if (encrypted)
-                { 
-                    fileContents = Encryption.Decrypt(fileContents);
-                }
+                //if (encrypted)
+                //{ 
+                    //fileContents = Encryption.Decrypt(fileContents);
+                //}
                 
                 RotationFileContents = fileContents;
 
@@ -368,10 +368,10 @@ namespace CloudMagic.Helpers
                     var readLines = true;
                     var fileContents = sr.ReadToEnd();
                     
-                    if (encrypted)
-                    {
-                        fileContents = Encryption.Decrypt(fileContents);
-                    }
+                    //if (encrypted)
+                    //{
+                    //    fileContents = Encryption.Decrypt(fileContents);
+                    //}
 
                     foreach (var line in fileContents.Split('\n'))
                     {
@@ -414,12 +414,12 @@ namespace CloudMagic.Helpers
 
                 using (var sw = new StreamWriter(FullRotationFilePath, false))
                 {
-                    if (encrypted)
-                    {
-                        updatedRotationText = Encryption.Encrypt(updatedRotationText);
-                        sw.WriteLine(updatedRotationText);
-                    }
-                    else
+                    //if (encrypted)
+                    //{
+                    //    updatedRotationText = Encryption.Encrypt(updatedRotationText);
+                    //    sw.WriteLine(updatedRotationText);
+                    //}
+                    //else
                     {
                         sw.WriteLine(updatedRotationText);
                     }                    
@@ -545,9 +545,7 @@ namespace CloudMagic.Helpers
 
                 using (var sr = new StreamWriter($"{LibBossPath}\\LibBossIDs-1.0.toc"))
                 {
-                    sr.WriteLine(InterfaceVersion.Contains("-")
-						? $"## Interface: {InterfaceVersion.Split('-')[1].Trim()}" 
-						: $"## Interface: {InterfaceVersion}");
+                    sr.WriteLine(InterfaceVersion.Contains("-")? $"## Interface: {InterfaceVersion.Split('-')[1].Trim()}" : $"## Interface: {InterfaceVersion}");
                     sr.WriteLine("## LoadOnDemand: 1");
                     sr.WriteLine("## Title: Lib: BossIDs-1.0");
                     sr.WriteLine("## A library to provide mobIDs for bosses.");

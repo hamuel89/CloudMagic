@@ -241,7 +241,7 @@ namespace CloudMagic.Helpers
         public static string AddonPath => InstallPath + "\\Interface\\AddOns";
         public static string Config => new StreamReader(Path.Combine(InstallPath, "WTF\\Config.wtf")).ReadToEnd();
         public static string LastSpell { private set; get; } = "";
-
+        
         public static bool IsInCombat
         {
             get
@@ -492,9 +492,9 @@ namespace CloudMagic.Helpers
                 {
                     if (c.R != 255 || c.B == 0)
                         return 0;
-                    var power = dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()?["Value"].ToString();
-                    return power != null ? int.Parse(power) : 0;
-
+                        var power = dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()?["Value"].ToString();
+                        return power != null ? int.Parse(power) : 0;
+                    
                 }
                 catch (Exception ex)
                 {
@@ -523,7 +523,7 @@ namespace CloudMagic.Helpers
                         return true;
                     else
                         return false;
-
+                 
                 }
                 catch (Exception ex)
                 {
@@ -548,7 +548,7 @@ namespace CloudMagic.Helpers
             {
                 if (tier > 20 || tier < 19)
                     return 0;
-
+                
                 c = WoW.GetBlockColor(4, 24);
                 var slot = c.R;
                 switch (tier)
@@ -590,7 +590,7 @@ namespace CloudMagic.Helpers
                 {
                     case 1:
                         slot = c.R;
-                        break;
+                        break;    
                     case 2:
                         slot = c.G;
                         break;
@@ -652,13 +652,13 @@ namespace CloudMagic.Helpers
                 var c2 = GetBlockColor(6, 7);
                 try
                 {
-                    var red1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"]) / 10);
+                    var red1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"])/10);
+                    var green1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"])/10);
+                    var blue1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"])/10);
 
-                    var red2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"]) / 10);
+                    var red2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"])/10);
+                    var green2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"])/10);
+                    var blue2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"])/10);
 
                     var strRed1 = "";
                     var strGreen1 = "";
@@ -704,13 +704,13 @@ namespace CloudMagic.Helpers
                 }
             }
         }
-
+        
         private static int RemoveTrailingZerosFromSpell(string spellId)
         {
             if (int.Parse(spellId) == 0)
                 return 0;
 
-            while (spellId.EndsWith("0"))
+            while(spellId.EndsWith("0"))
             {
                 spellId = spellId.Substring(0, spellId.Length - 1);
             }
@@ -732,13 +732,13 @@ namespace CloudMagic.Helpers
                 var c2 = GetBlockColor(8, 7);
                 try
                 {
-                    var red1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"]) / 10);
+                    var red1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"])/10);
+                    var green1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"])/10);
+                    var blue1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"])/10);
 
-                    var red2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"]) / 10);
+                    var red2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"])/10);
+                    var green2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"])/10);
+                    var blue2 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"])/10);
 
                     var strRed1 = "";
                     var strGreen1 = "";
@@ -791,200 +791,87 @@ namespace CloudMagic.Helpers
         /// <value>
         /// The arena1 casting spell identifier.
         /// </value>
-        public static int Arena1CastingSpellID //returns the ID of the spell
+        public static int ArenaCastingSpellID(int player) //returns the ID of the spell
         {
-            get
-            {
-                var c1 = GetBlockColor(9, 7);
-                var c2 = GetBlockColor(10, 7);
+            if (player > 4)
+                return 0;
+                var c1 = GetBlockColor(8+player, 7);
                 try
                 {
-                    var red1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"]) / 10);
-
-                    var red2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"]) / 10);
+                    var red1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"])/10);
+                    var green1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"])/10);
+                    var blue1 = (int) (float.Parse((string) dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"])/10);
 
                     var strRed1 = "";
                     var strGreen1 = "";
                     var strBlue1 = "";
-                    var strRed2 = "";
-                    var strGreen2 = "";
-                    var strBlue2 = "";
-
-                    if (red1 != 10)
+               
+                    if (red1 != 100)
                     {
                         strRed1 = red1.ToString();
                     }
-                    if (green1 != 10)
+                    if (green1 != 100)
                     {
                         strGreen1 = green1.ToString();
                     }
-                    if (blue1 != 10)
+                    if (blue1 != 100)
                     {
                         strBlue1 = blue1.ToString();
                     }
-                    if (red2 != 10)
-                    {
-                        strRed2 = red2.ToString();
-                    }
-                    if (green2 != 10)
-                    {
-                        strGreen2 = green2.ToString();
-                    }
-                    if (blue2 != 10)
-                    {
-                        strBlue2 = blue2.ToString();
-                    }
 
-                    var spellText = strRed1 + strGreen1 + strBlue1 + strRed2 + strGreen2 + strBlue2;
+                    var spellText = strRed1 + strGreen1 + strBlue1;
                     //Log.Write("Arena 1 casting spell ID: " + spellText);
                     return RemoveTrailingZerosFromSpell(spellText);
                 }
                 catch (Exception ex)
                 {
-                    Log.Write($" Red1 = {c1.R} Green1 = {c1.G} Blue1 = {c1.B} Red2 = {c2.R} Green2 = {c2.G} Blue2 = {c2.B}");
+                    Log.Write($" Red1 = {c1.R} Green1 = {c1.G} Blue1 = {c1.B}");
                     Log.Write(ex.Message, Color.Red);
                     return 0;
                 }
+        }
+        public static bool BossIsCastingAndSpellIsInterruptible(int boss)
+        {
+            var c = GetBlockColor(8 + boss, 7);
+            try
+            {
+                var interrupt = dtColorHelper.Select($"[Rounded] = '{c.R}'").FirstOrDefault()?["Value"].ToString();
+                // ReSharper disable once AssignNullToNotNullAttribute
+                return interrupt != null && int.Parse(interrupt) == 100 ? true : false;
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Write($"Boss Interrup/cast Red1 = {c.R} Green1 = {c.G} Blue1 = {c.B}");
+                Log.Write(ex.Message, Color.Red);
+                return false;
             }
         }
 
         /// <summary>
-        /// Gets the arena2 casting spell identifier.
+        /// Gets the boss n percent cast.
         /// </summary>
         /// <value>
-        /// The arena2 casting spell identifier.
+        /// The target percent cast.
         /// </value>
-        public static int Arena2CastingSpellID //returns the ID of the spell
+        public static int BossPercentCast(int boss)
         {
-            get
+            var c = GetBlockColor(8 + boss, 7);
+            try
             {
-                var c1 = GetBlockColor(11, 7);
-                var c2 = GetBlockColor(12, 7);
-                try
-                {
-                    var red1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"]) / 10);
-
-                    var red2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"]) / 10);
-
-                    var strRed1 = "";
-                    var strGreen1 = "";
-                    var strBlue1 = "";
-                    var strRed2 = "";
-                    var strGreen2 = "";
-                    var strBlue2 = "";
-
-                    if (red1 != 10)
-                    {
-                        strRed1 = red1.ToString();
-                    }
-                    if (green1 != 10)
-                    {
-                        strGreen1 = green1.ToString();
-                    }
-                    if (blue1 != 10)
-                    {
-                        strBlue1 = blue1.ToString();
-                    }
-                    if (red2 != 10)
-                    {
-                        strRed2 = red2.ToString();
-                    }
-                    if (green2 != 10)
-                    {
-                        strGreen2 = green2.ToString();
-                    }
-                    if (blue2 != 10)
-                    {
-                        strBlue2 = blue2.ToString();
-                    }
-
-                    var spellText = strRed1 + strGreen1 + strBlue1 + strRed2 + strGreen2 + strBlue2;
-                    //Log.Write("Arena 2 casting spell ID: " + spellText);
-                    return RemoveTrailingZerosFromSpell(spellText);
-                }
-                catch (Exception ex)
-                {
-                    Log.Write($" Red1 = {c1.R} Green1 = {c1.G} Blue1 = {c1.B} Red2 = {c2.R} Green2 = {c2.G} Blue2 = {c2.B}");
-                    Log.Write(ex.Message, Color.Red);
-                    return 0;
-                }
+                var percent = dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()?["Value"].ToString();
+                // ReSharper disable once AssignNullToNotNullAttribute
+                return percent != null && int.Parse(percent) == 0 ? 100 -int.Parse(percent) : 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Write($"Boss Interrup/cast Red1 = {c.R} Green1 = {c.G} Blue1 = {c.B}");
+                Log.Write(ex.Message, Color.Red);
+                return 0;
             }
         }
 
-        /// <summary>
-        /// Gets the arena3 casting spell identifier.
-        /// </summary>
-        /// <value>
-        /// The arena3 casting spell identifier.
-        /// </value>
-        public static int Arena3CastingSpellID //returns the ID of the spell
-        {
-            get
-            {
-                var c1 = GetBlockColor(13, 7);
-                var c2 = GetBlockColor(14, 7);
-                try
-                {
-                    var red1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue1 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c1.B}'").FirstOrDefault()?["Value"]) / 10);
 
-                    var red2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.R}'").FirstOrDefault()?["Value"]) / 10);
-                    var green2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.G}'").FirstOrDefault()?["Value"]) / 10);
-                    var blue2 = (int)(float.Parse((string)dtColorHelper.Select($"[Rounded] = '{c2.B}'").FirstOrDefault()?["Value"]) / 10);
-
-                    var strRed1 = "";
-                    var strGreen1 = "";
-                    var strBlue1 = "";
-                    var strRed2 = "";
-                    var strGreen2 = "";
-                    var strBlue2 = "";
-
-                    if (red1 != 10)
-                    {
-                        strRed1 = red1.ToString();
-                    }
-                    if (green1 != 10)
-                    {
-                        strGreen1 = green1.ToString();
-                    }
-                    if (blue1 != 10)
-                    {
-                        strBlue1 = blue1.ToString();
-                    }
-                    if (red2 != 10)
-                    {
-                        strRed2 = red2.ToString();
-                    }
-                    if (green2 != 10)
-                    {
-                        strGreen2 = green2.ToString();
-                    }
-                    if (blue2 != 10)
-                    {
-                        strBlue2 = blue2.ToString();
-                    }
-
-                    var spellText = strRed1 + strGreen1 + strBlue1 + strRed2 + strGreen2 + strBlue2;
-                    //Log.Write("Arena 3 casting spell ID: " + spellText);
-                    return RemoveTrailingZerosFromSpell(spellText);
-                }
-                catch (Exception ex)
-                {
-                    Log.Write($" Red1 = {c1.R} Green1 = {c1.G} Blue1 = {c1.B} Red2 = {c2.R} Green2 = {c2.G} Blue2 = {c2.B}");
-                    Log.Write(ex.Message, Color.Red);
-                    return 0;
-                }
-            }
-        }
 
         private static int GetNumberNameplates => 1;
 
@@ -1052,8 +939,8 @@ namespace CloudMagic.Helpers
                     var lvl1 = dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()?["Value"].ToString();
                     var lvl2 = dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()?["Value"].ToString();
                     if (lvl1 != null && lvl2 != null)
-                        return int.Parse(lvl1) * 100 + int.Parse(lvl2);
-
+                            return int.Parse(lvl1)*100 + int.Parse(lvl2);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -1314,7 +1201,7 @@ namespace CloudMagic.Helpers
                 return c.R == Color.Blue.R && c.G == Color.Blue.G && c.B == Color.Blue.B;
             }
         }
-
+        
         public static bool IsBoss => HasBossTarget;
 
         /// <summary>
@@ -1375,7 +1262,7 @@ namespace CloudMagic.Helpers
             if (id <= 0)
                 throw new Exception("Party members go from 1 - 5");
             id = id - 1;
-            Mouse.LeftClick(958, 3 + 20 * id);
+            Mouse.LeftClick(958, 3 + 20*id);
         }
 
         /// <summary>
@@ -1411,7 +1298,7 @@ namespace CloudMagic.Helpers
             synthesizer.Volume = 100; // 0...100
             synthesizer.Rate = 2; // -10...10
             synthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Adult);
-
+            
             Process = wowProcess;
 
             Log.Write("Successfully connected to WoW with process ID: " + Process.Id, Color.Green);
@@ -1448,8 +1335,8 @@ namespace CloudMagic.Helpers
             {
                 var drNew = dtColorHelper.NewRow();
                 drNew["Percent"] = i < 10 ? "0.0" + i : "0." + i;
-                drNew["Unrounded"] = double.Parse(drNew["Percent"].ToString()) * 255;
-                drNew["Rounded"] = Math.Round(double.Parse(drNew["Percent"].ToString()) * 255, 0);
+                drNew["Unrounded"] = double.Parse(drNew["Percent"].ToString())*255;
+                drNew["Rounded"] = Math.Round(double.Parse(drNew["Percent"].ToString())*255, 0);
                 drNew["Value"] = i;
                 dtColorHelper.Rows.Add(drNew);
             }
@@ -1505,7 +1392,7 @@ namespace CloudMagic.Helpers
         private static bool TargetHasBuff(int auraNoInArrayOfAuras)
         {
             var c = GetBlockColor(auraNoInArrayOfAuras, 6);
-            return c.R != 255 && c.B != 255;
+            return c.R != 255  && c.B != 255;
         }
 
         [DllImport("user32.dll")]
@@ -1588,13 +1475,13 @@ namespace CloudMagic.Helpers
                 switch (row)
                 {
                     case 1:
-                        c = GetBlockColor(1, 24);
+                         c = GetBlockColor(1, 24);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.R}'").FirstOrDefault()["Value"].ToString());
                     case 2:
                         c = GetBlockColor(1, 24);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()["Value"].ToString());
                     case 3:
-                        c = GetBlockColor(1, 24);
+                         c = GetBlockColor(1, 24);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()["Value"].ToString());
                     case 4:
                         c = GetBlockColor(2, 24);
@@ -1632,7 +1519,7 @@ namespace CloudMagic.Helpers
                 try
                 {
                     if (c.B != 0) return "none";
-
+                    
                     string[] Race = new string[]
                     {"None","Human","Dwarf", "NightElf", "Gnome", "Dreanei", "Pandaren", "Orc", "Undead", "Tauren", "Troll", "BloodElf", "Goblin", "Worgen" ,"none"};
                     Log.WriteDirectlyToLogFile($"Green = {c.G}");
@@ -2022,7 +1909,7 @@ namespace CloudMagic.Helpers
             }
             catch (Exception ex)
             {
-                Log.Write("Failed to find buff Remaining for color R = " + c.R + "G = " + c.G + " B = " + c.B, Color.Red);
+                Log.Write("Failed to find buff Remaining for color R = " + c.R + "G = " + c.G +" B = " +c.B, Color.Red);
                 Log.Write("Error: " + ex.Message, Color.Red);
             }
 
@@ -2244,7 +2131,7 @@ namespace CloudMagic.Helpers
         public static bool PlayerHasBuff(int auraNoInArrayOfAuras)
         {
             var c = GetBlockColor(auraNoInArrayOfAuras, 8);
-            return c.R != 255 && c.B != 255;
+            return c.R != 255  && c.B != 255;
         }
 
         /// <summary>
@@ -2319,7 +2206,7 @@ namespace CloudMagic.Helpers
         public static bool PetHasBuff(int auraNoInArrayOfAuras)
         {
             var c = GetBlockColor(auraNoInArrayOfAuras, 10);
-            return c.R != 255 && c.B != 255;
+            return c.R != 255 &&  c.B != 255;
         }
 
         /// <summary>
@@ -2416,7 +2303,7 @@ namespace CloudMagic.Helpers
                         {
                             var hSrcDC = gsrc.GetHdc();
                             var hDC = gdest.GetHdc();
-                            BitBlt(hDC, 0, 0, 1, 1, hSrcDC, column, row, (int)CopyPixelOperation.SourceCopy);
+                            BitBlt(hDC, 0, 0, 1, 1, hSrcDC, column, row, (int) CopyPixelOperation.SourceCopy);
                             gdest.ReleaseHdc();
                             gsrc.ReleaseHdc();
                         }
@@ -2457,7 +2344,7 @@ namespace CloudMagic.Helpers
                         {
                             var hSrcDC = gsrc.GetHdc();
                             var hDC = gdest.GetHdc();
-                            BitBlt(hDC, 0, 0, 1, 1, hSrcDC, column, row, (int)CopyPixelOperation.SourceCopy);
+                            BitBlt(hDC, 0, 0, 1, 1, hSrcDC, column, row, (int) CopyPixelOperation.SourceCopy);
                             gdest.ReleaseHdc();
                             gsrc.ReleaseHdc();
                         }
@@ -2476,7 +2363,7 @@ namespace CloudMagic.Helpers
                 }
             }
         }
-
+        
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern IntPtr GetForegroundWindow();
 
@@ -2503,12 +2390,12 @@ namespace CloudMagic.Helpers
         /// <param name="Key">The key.</param>
         public static void KeyDown(Keys Key)
         {
-            SendMessage(Process.MainWindowHandle, 0x100, (int)Key, 0);
+            SendMessage(Process.MainWindowHandle, 0x100, (int) Key, 0);
         }
 
         public static void KeyUp(Keys Key)
         {
-            SendMessage(Process.MainWindowHandle, 0x101, (int)Key, 0);
+            SendMessage(Process.MainWindowHandle, 0x101, (int) Key, 0);
         }
 
         /// <summary>

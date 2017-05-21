@@ -1,10 +1,6 @@
-﻿Original Developer: WiNiFiX
-Original Name: CloudMagic
-Project Originally Started: May 2016
-Project Originally Ended: May 2017
-Developer: CloudMagic
-Project Restarted by CloudMagic: May 2017
-Project Name Changed to: CloudMagic
+﻿Developer: WiNiFiX
+Copyright Owner: WiNiFiX
+Started on Project: May 2016
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 

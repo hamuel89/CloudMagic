@@ -15,6 +15,7 @@ namespace CloudMagic.Helpers
             InternalSpellNo = internalSpellNo;
 
             SpellId = spellId;
+            
             SpellName = spellName.Replace("\r", "").Replace("\n", "");
             KeyBind = keyBind.Replace("\r", "").Replace("\n", "");
         }
@@ -32,12 +33,6 @@ namespace CloudMagic.Helpers
             return (WoW.Keys)Enum.Parse(typeof(WoW.Keys), keystr);
         }
 
-        public WoW.Keys Key
-        {
-            get
-            {
-                return toKey(KeyBind);
-            }
-        }
+        public WoW.Keys Key => toKey(KeyBind);
     }
 }

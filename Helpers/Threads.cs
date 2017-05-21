@@ -35,30 +35,6 @@ namespace CloudMagic.Helpers
 
         private delegate void UpdateTextBoxCallback(TextBox txt, string text);
 
-        public static void UpdateCooldownsLabel(ChromeLabel txt, string text)
-        {
-            if (text == null)
-                return;
-
-            try
-            {
-                if (txt.InvokeRequired)
-                {
-                    UpdateCooldownsLabelCallback d = UpdateCooldownsLabel;
-                    txt.Invoke(d, txt, text);
-                    return;
-                }
-
-                txt.Text = text;
-            }
-            catch
-            {
-                // This catch is simply here to avoid the OCCASIONAL crash of the application when closing it by pressing the stop button in visual studio while it is running tasks
-            }
-        }
-
-        private delegate void UpdateCooldownsLabelCallback(ChromeLabel txt, string text);
-
         public static void UpdateProgressBar(ProgressBar prg, int value)
         {
             try
@@ -80,25 +56,26 @@ namespace CloudMagic.Helpers
 
         private delegate void UpdateProgressBarCallback(ProgressBar prg, int value);
 
-        public static void UpdateProgressBar2(ColorProgressBar.ColorProgressBar prg, int value)
+       
+        public static void UpdateButton(Button btn, string text)
         {
-            try
-            {
-                if (prg.InvokeRequired)
-                {
-                    UpdateProgressBarCallback2 d = UpdateProgressBar2;
-                    prg.Invoke(d, prg, value);
+            if (text == null)
+                return;
+
+            try {
+                if (btn.InvokeRequired) {
+                    UpdateButtonCallback d = UpdateButton;
+                    btn.Invoke(d, btn, text);
                     return;
                 }
 
-                prg.Value = value;
+                btn.Text = text;
             }
-            catch
-            {
+            catch {
                 // This catch is simply here to avoid the OCCASIONAL crash of the application when closing it by pressing the stop button in visual studio while it is running tasks
             }
         }
 
-        private delegate void UpdateProgressBarCallback2(ColorProgressBar.ColorProgressBar prg, int value);
+        private delegate void UpdateButtonCallback(Button txt, string text);
     }
 }
