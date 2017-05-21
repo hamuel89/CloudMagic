@@ -1,8 +1,7 @@
-Original Developer : WiNiFiX
+﻿Original Developer : WiNiFiX
 Project started in: January 2016
 Project considered complete and ready for beta testing on: 2016.07.29
 Project Ended : May 2017
-
 
 New Developer : Cloudmagic
 Project Relaunched and Renamed : May 2017

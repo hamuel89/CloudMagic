@@ -185,7 +185,6 @@ namespace CloudMagic.GUI
             if (GitHubVersion > LocalVersion)
             {
                 MessageBox.Show("Please note you are not running the latest version of the bot, please update it.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Application.Exit();
             }
 
             Log.WriteNoTime("To view a sample rotation see the file: " + Application.StartupPath + "\\Rotations\\Druid\\Druid-Balance-Scotishdwarf.cs", Color.Gray);
