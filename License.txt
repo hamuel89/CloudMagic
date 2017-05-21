@@ -1,6 +1,11 @@
-﻿Developer: WiNiFiX
-Copyright Owner: WiNiFiX
-Started on Project: May 2016
+Original Developer : WiNiFiX
+Project started in: January 2016
+Project considered complete and ready for beta testing on: 2016.07.29
+Project Ended : May 2017
+
+
+New Developer : Cloudmagic
+Project Relaunched and Renamed : May 2017
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR 
