@@ -328,13 +328,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd $(ConfigurationName)
-del *.xml
-del *.config
-rmdir Logs /s /q
-xcopy "$(SolutionDir)CloudMagic\Bin\Debug\*.exe" "D:\Development\CloudMagicBin\" /Y
-xcopy "$(SolutionDir)CloudMagic\LUA\Addon.lua" "D:\Development\CloudMagicBin\LUA\Addon.lua" /Y
-xcopy "$(SolutionDir)CloudMagic\Properties\AssemblyInfo.cs" "D:\Development\CloudMagicBin\Properties\" /Y
+    <PostBuildEvent>xcopy "$(SolutionDir)Bin\Debug\*.exe" "D:\Development\CloudMagicBin\" /Y
+xcopy "$(SolutionDir)LUA\Addon.lua" "D:\Development\CloudMagicBin\LUA\Addon.lua" /Y
+xcopy "$(SolutionDir)Properties\AssemblyInfo.cs" "D:\Development\CloudMagicBin\Properties\" /Y
 
 </PostBuildEvent>
   </PropertyGroup>
