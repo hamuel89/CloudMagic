@@ -18,7 +18,7 @@ namespace CloudMagic.GUI
             InitializeComponent();
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.EnableNotifyMessage, true);
-            SetStyle(ControlStyles.SupportsTransparentBackColor, false);
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             BackColor = Color.Black;
             TransparencyKey = Color.White;
         }
@@ -34,9 +34,9 @@ namespace CloudMagic.GUI
             if (overlay == null)
                 return;
 
-            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.SingleTarget) overlay.RotationMode.Text = "Single-Target";
-            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.SingleTargetCleave) overlay.RotationMode.Text = "Cleave-Target";
-            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.AOE) overlay.RotationMode.Text = "AoE-Target";
+            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.SingleTarget) overlay.RotationMode.Text = "Single";
+            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.SingleTargetCleave) overlay.RotationMode.Text = "Cleave";
+            if (frmMain.combatRoutine.Type == CombatRoutine.RotationType.AOE) overlay.RotationMode.Text = "AoE";
         }
 
         public static void StartLabelUpdate()

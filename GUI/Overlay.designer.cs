@@ -42,9 +42,9 @@
             this.cmdRotationSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmdRotationSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
             this.cmdRotationSettings.ForeColor = System.Drawing.Color.DarkGreen;
-            this.cmdRotationSettings.Location = new System.Drawing.Point(12, 135);
+            this.cmdRotationSettings.Location = new System.Drawing.Point(107, 72);
             this.cmdRotationSettings.Name = "cmdRotationSettings";
-            this.cmdRotationSettings.Size = new System.Drawing.Size(181, 35);
+            this.cmdRotationSettings.Size = new System.Drawing.Size(86, 35);
             this.cmdRotationSettings.TabIndex = 3;
             this.cmdRotationSettings.Text = "Settings...";
             this.cmdRotationSettings.UseVisualStyleBackColor = false;
@@ -54,13 +54,14 @@
             // 
             this.Status.BackColor = System.Drawing.Color.Red;
             this.Status.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
+            this.Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.Status.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.Status.Location = new System.Drawing.Point(133, 12);
+            this.Status.Location = new System.Drawing.Point(133, 8);
             this.Status.Name = "Status";
-            this.Status.Size = new System.Drawing.Size(60, 35);
+            this.Status.Size = new System.Drawing.Size(60, 25);
             this.Status.TabIndex = 4;
             this.Status.Text = "OFF";
+            this.Status.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.Status.UseVisualStyleBackColor = false;
             this.Status.Click += new System.EventHandler(this.Status_Click);
             // 
@@ -69,7 +70,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
             this.label1.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Location = new System.Drawing.Point(8, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(78, 24);
             this.label1.TabIndex = 5;
@@ -80,7 +81,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
             this.label2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.label2.Location = new System.Drawing.Point(12, 59);
+            this.label2.Location = new System.Drawing.Point(8, 36);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(105, 24);
             this.label2.TabIndex = 7;
@@ -90,11 +91,11 @@
             // 
             this.Cooldowns.BackColor = System.Drawing.Color.Red;
             this.Cooldowns.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Cooldowns.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
+            this.Cooldowns.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.Cooldowns.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.Cooldowns.Location = new System.Drawing.Point(133, 53);
+            this.Cooldowns.Location = new System.Drawing.Point(133, 36);
             this.Cooldowns.Name = "Cooldowns";
-            this.Cooldowns.Size = new System.Drawing.Size(60, 35);
+            this.Cooldowns.Size = new System.Drawing.Size(60, 25);
             this.Cooldowns.TabIndex = 6;
             this.Cooldowns.Text = "OFF";
             this.Cooldowns.UseVisualStyleBackColor = false;
@@ -106,11 +107,11 @@
             this.RotationMode.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RotationMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F);
             this.RotationMode.ForeColor = System.Drawing.Color.DarkGreen;
-            this.RotationMode.Location = new System.Drawing.Point(12, 94);
+            this.RotationMode.Location = new System.Drawing.Point(12, 72);
             this.RotationMode.Name = "RotationMode";
-            this.RotationMode.Size = new System.Drawing.Size(181, 35);
+            this.RotationMode.Size = new System.Drawing.Size(86, 35);
             this.RotationMode.TabIndex = 8;
-            this.RotationMode.Text = "Single-Target";
+            this.RotationMode.Text = "Single";
             this.RotationMode.UseVisualStyleBackColor = false;
             this.RotationMode.Click += new System.EventHandler(this.RotationMode_Click);
             // 
@@ -119,7 +120,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(210, 182);
+            this.ClientSize = new System.Drawing.Size(207, 118);
             this.Controls.Add(this.RotationMode);
             this.Controls.Add(this.Cooldowns);
             this.Controls.Add(this.label2);
@@ -128,6 +129,7 @@
             this.Controls.Add(this.cmdRotationSettings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Overlay";
+            this.Opacity = 0.5D;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Overlay";
