@@ -13,6 +13,7 @@ using CloudMagic.GUI;
 using CloudMagic.Helpers;
 using System.Media;
 using System.Runtime.InteropServices;
+using System.IO;
 
 // ReSharper disable FunctionNeverReturns
 // ReSharper disable MemberCanBeProtected.Global
@@ -38,9 +39,8 @@ namespace CloudMagic.Rotation
             AOE = 2
         }
 
-        private volatile RotationType _rotationType = RotationType.SingleTarget;
+        public volatile RotationType _rotationType = RotationType.SingleTarget;
 
-        private Thread characterInfo;
         public CombatRoutine combatRoutine;
         private Thread mainThread;
 
@@ -58,26 +58,14 @@ namespace CloudMagic.Rotation
         }
 
         public RotationState State { get; private set; } = RotationState.Stopped;
-
+        
         public RotationType Type => _rotationType;
 
         public abstract string Name { get; }
-        public abstract string Class { get; }
-
-        public void CharacterInfoThread()
-        {
-            while (true)
-            {
-                pause.WaitOne();
-
-                Threads.UpdateTextBox(parent.txtPlayerHealth, WoW.HealthPercent.ToString());
-                Threads.UpdateTextBox(parent.txtPlayerPower, WoW.Power.ToString());
-                Threads.UpdateTextBox(parent.txtTargetHealth, WoW.TargetHealthPercent.ToString());
-                Threads.UpdateTextBox(parent.txtTargetCasting, WoW.TargetIsCasting.ToString());
-
-                Thread.Sleep(500);
-            }
-        }
+         public virtual string Class { get; }
+        public virtual int CLEAVE { get; }
+        public abstract int AOE { get; }
+        public abstract int SINGLE { get; }
 
         [DllImport("User32.dll")]
         private static extern short GetAsyncKeyState(Keys vKey);
@@ -111,15 +99,11 @@ namespace CloudMagic.Rotation
             Thread.Sleep(random.Next(50)); // Make the bot more human-like add some randomness in
         }
 
-        public void Load(frmMain parent)
+        public bool Load(frmMain parent)
         {
             this.parent = parent;
-
             PulseFrequency = int.Parse(ConfigFile.Pulse.ToString());
             Log.Write("Using Pulse Frequency (ms) = " + PulseFrequency);
-
-            characterInfo = new Thread(CharacterInfoThread) {IsBackground = true};
-            characterInfo.Start();
 
             mainThread = new Thread(MainThreadTick) {IsBackground = true};
             mainThread.Start();
@@ -127,6 +111,22 @@ namespace CloudMagic.Rotation
             combatRoutine = this;
 
             Initialize();
+            if (SINGLE == 0 || CLEAVE == 0 || AOE == 0)
+            {
+                Log.Write("Please set AOE settings with WoWGuiMode(aoe,cleave,single)", Color.Red);
+                pause.Reset();
+                return false;
+            }
+            Log.Write($"Single : {SINGLE} Cleave : {CLEAVE} AOE : {AOE} ");
+            using (var sr = new StreamWriter($"{SpellBook.AddonPath}\\Gui.Lua"))
+            {
+                var GuiFile = Directory.GetCurrentDirectory() + "\\LUA\\Gui.lua";
+                var GuiContents = File.ReadAllText(GuiFile);
+                sr.WriteLine($"local Auto = {{ Single = {SINGLE}, Cleave = {CLEAVE}, AOE = {AOE} }} ");
+                sr.WriteLine(GuiContents);
+                sr.Close();
+            }
+            return true;
         }
 
         public string FileName = "";
@@ -203,7 +203,7 @@ namespace CloudMagic.Rotation
 
         public void ChangeType(RotationType rotationType)
         {
-            if (_rotationType == rotationType) return;
+            if (_rotationType == rotationType ||WoW.WoWGuiOn) return;
 
             _rotationType = rotationType;
 
@@ -217,6 +217,28 @@ namespace CloudMagic.Rotation
             }
 
             Overlay.updateLabels();
+        }
+
+
+
+
+        private bool lastNamePlate = false;
+        public void SelectRotation(int aoe, int cleave, int single)
+        {
+            int count = WoW.CountEnemyNPCsInRange;
+            if (!lastNamePlate)
+            {
+                ChangeType(RotationType.SingleTarget);
+                lastNamePlate = true;
+            }
+            lastNamePlate = WoW.Nameplates;
+            if (count >= aoe )
+                ChangeType(RotationType.AOE);
+            if (count == cleave)
+                ChangeType(RotationType.SingleTargetCleave);
+            if (count <= single)
+                ChangeType(RotationType.SingleTarget);
+
         }
 
         private bool useCooldowns;
@@ -236,7 +258,7 @@ namespace CloudMagic.Rotation
                 Overlay.UpdateLabelsCooldowns();
             }
         }
-
+       
         public abstract void Initialize();
         public abstract void Stop();
         public abstract void Pulse();
