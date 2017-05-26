@@ -75,6 +75,10 @@ namespace CloudMagic.GUI
                 Log.Write("Target % Cast: " + WoW.TargetPercentCast);
                 Thread.Sleep(100);
             }
+            Log.Write("WoW Gui Info Displayed :" + WoW.WoWGui);
+            Log.Write("WoW Gui On :" + WoW.WoWGuiOn);
+            Log.Write("WoW Gui CoolDown :" + WoW.WoWGuiCoolDown);
+            Log.Write("WoW Gui Rotation :" + WoW.WoWGuiMode);
         }
     }
 }

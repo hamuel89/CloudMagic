@@ -12,6 +12,7 @@ using CloudMagic.Helpers;
 using System.Globalization;
 using System.Linq;
 using System.Data;
+using System.IO;
 
 // ReSharper disable once CheckNamespace
 #pragma warning disable 168
@@ -61,7 +62,7 @@ namespace CloudMagic.GUI
             BindingSource source = new BindingSource();
             foreach(DataRow dr in SpellBook.dtSpells.Rows)
             {
-                dr[4] = ConfigFile.ReadValue("Keybinds", dr[0].ToString());                
+                dr[4] = ConfigFile.ReadValue($"Keybinds-{txtAddonAuthor}", dr[0].ToString());                
             }
 
             source.DataSource = SpellBook.dtSpells;
@@ -133,13 +134,15 @@ namespace CloudMagic.GUI
                 return;
             }
 
+            FileInfo RotationName = new FileInfo(SpellBook.FullRotationFilePath);
             dgSpells.CommitEdit(DataGridViewDataErrorContexts.Commit);
             // Save Custom Keybinds to spells
             foreach (DataGridViewRow row in dgSpells.Rows)
             {
+                
                 string spellId = row.Cells[0].Value.ToString();
                 string keyBind = row.Cells[4].Value.ToString();
-                ConfigFile.WriteValue("Keybinds", spellId, keyBind);
+                ConfigFile.WriteValue($"Keybinds-{RotationName.Name}",  spellId, keyBind);
             }
 
             SpellBook.Save(txtAddonAuthor, AddonInterfaceVersion);            
