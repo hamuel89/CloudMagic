@@ -59,6 +59,31 @@ namespace CloudMagic.Helpers
             }
         }
 
+        public static bool OverLay_WoW
+        {
+            get
+            {
+                var disableOverlay = ReadValue("PixelMagic", "OverLay_WoW").Trim();
+
+                if (disableOverlay != "")
+                {
+                    return Convert.ToBoolean(disableOverlay);
+                }
+
+                return true;
+            }
+            set
+            {
+                WriteValue("PixelMagic", "OverLay_WoW", value.ToString());
+
+                if (value)
+                    Overlay.HideOverlay();
+                else
+                    Overlay.ShowOverlay();
+            }
+        }
+
+
         public static decimal Pulse
         {
             get
