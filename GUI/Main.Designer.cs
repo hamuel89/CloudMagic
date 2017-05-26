@@ -72,6 +72,8 @@
             this.transparentLabel2 = new System.Windows.Forms.Label();
             this.txtTargetHealth = new System.Windows.Forms.TextBox();
             this.transparentLabel3 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.OverLay_WoW = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudPulse)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -445,9 +447,9 @@
             this.transparentLabel10.ForeColor = System.Drawing.Color.Black;
             this.transparentLabel10.Location = new System.Drawing.Point(799, 307);
             this.transparentLabel10.Name = "transparentLabel10";
-            this.transparentLabel10.Size = new System.Drawing.Size(85, 15);
+            this.transparentLabel10.Size = new System.Drawing.Size(106, 15);
             this.transparentLabel10.TabIndex = 39;
-            this.transparentLabel10.Text = "Disable Overlay";
+            this.transparentLabel10.Text = "Windows Overlay";
             // 
             // transparentLabel7
             // 
@@ -546,6 +548,26 @@
             this.transparentLabel3.TabIndex = 51;
             this.transparentLabel3.Text = "Target Health";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(799, 286);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.TabIndex = 52;
+            this.label1.Text = "InGame OverLay";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // OverLay_WoW
+            // 
+            this.OverLay_WoW.AutoSize = true;
+            this.OverLay_WoW.Location = new System.Drawing.Point(929, 290);
+            this.OverLay_WoW.Name = "OverLay_WoW";
+            this.OverLay_WoW.Size = new System.Drawing.Size(15, 14);
+            this.OverLay_WoW.TabIndex = 53;
+            this.OverLay_WoW.UseVisualStyleBackColor = true;
+            this.OverLay_WoW.CheckedChanged += new System.EventHandler(this.OverLay_WoW_CheckedChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -553,6 +575,8 @@
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(951, 557);
+            this.Controls.Add(this.OverLay_WoW);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.txtTargetHealth);
             this.Controls.Add(this.transparentLabel3);
             this.Controls.Add(this.txtPlayerPower);
@@ -642,6 +666,8 @@
         private System.Windows.Forms.Label transparentLabel2;
         public System.Windows.Forms.TextBox txtTargetHealth;
         private System.Windows.Forms.Label transparentLabel3;
+        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.CheckBox OverLay_WoW;
     }
 }
 

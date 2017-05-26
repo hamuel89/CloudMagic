@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Media;
 using System.Management;
 using System.Reflection;
 using System.Threading;
@@ -73,6 +74,97 @@ namespace CloudMagic.GUI
         }
 
         #endregion
+        private Thread characterInfo;
+        private bool WoWGui = false;
+        private bool WoWGuiOn = false;
+        private bool WoWGuiCoolDown = false;
+        private int WoWGuiMode = 0;
+        public void CharacterInfoThread()
+        {
+            if (combatRoutine == null)
+            {
+                MessageBox.Show("Please select a rotation to load before starting the bot.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            while (true)
+            {
+                Threads.UpdateTextBox(txtPlayerHealth, WoW.HealthPercent.ToString());
+                Threads.UpdateTextBox(txtPlayerPower, WoW.Power.ToString());
+                Threads.UpdateTextBox(txtTargetHealth, WoW.TargetHealthPercent.ToString());
+                Threads.UpdateTextBox(txtTargetCasting, WoW.TargetIsCasting.ToString());
+                WoWGui = WoW.WoWGui;
+                WoWGuiOn = WoW.WoWGuiOn;
+                WoWGuiCoolDown = WoW.WoWGuiCoolDown;
+                WoWGuiMode = WoW.WoWGuiMode;
+                if (WoWGuiOn && combatRoutine.State == CombatRoutine.RotationState.Stopped)
+                {
+                    Log.Write("Start via WoW Gui");
+                    combatRoutine.Start();
+                }
+                if (WoWGui && !WoW.WoWGuiOn && combatRoutine.State == CombatRoutine.RotationState.Running)
+                {
+                    Log.Write("Stopping via WoW Gui");
+                    combatRoutine.Pause();
+                }
+                if (WoWGuiCoolDown && !combatRoutine.UseCooldowns )
+                {
+                    Log.Write($"WoW Gui:CoolDown On");
+                    combatRoutine.UseCooldowns = true;
+
+                }
+                if (WoWGui && !WoWGuiCoolDown && combatRoutine.UseCooldowns)
+                {
+                    Log.Write("WoW Gui:CoolDown Off");
+                    combatRoutine.UseCooldowns = false;
+                }
+                if(WoWGui)
+                {
+                    
+                    switch (WoWGuiMode)
+                    {
+                        case 1:
+                            if (combatRoutine.Type != CombatRoutine.RotationType.SingleTarget)
+                            {
+                                WoWGuiChange(CombatRoutine.RotationType.SingleTarget);
+                            }
+                            break;
+                        case 2:
+                            if (combatRoutine.Type != CombatRoutine.RotationType.SingleTargetCleave)
+                            {
+                                WoWGuiChange(CombatRoutine.RotationType.SingleTargetCleave);
+                            }
+                            break;
+                        case 3:
+                            if (combatRoutine.Type != CombatRoutine.RotationType.AOE)
+                            {
+                            
+                                WoWGuiChange(CombatRoutine.RotationType.AOE);
+                            }
+                            break;
+                    }
+                    
+                }
+                    
+                Thread.Sleep(1000);
+            }
+        }
+        private void WoWGuiChange(CombatRoutine.RotationType rotationType)
+        {
+            if (combatRoutine._rotationType == rotationType && WoW.WoWGuiOn) return;
+
+            combatRoutine._rotationType = rotationType;
+            Log.Write("WoW Gui: Rotation Type"+ rotationType);
+            
+
+            WoW.Speak(rotationType.ToString());
+
+            if (ConfigFile.PlayErrorSounds)
+            {
+                SystemSounds.Beep.Play();
+            }
+
+            Overlay.updateLabels();
+        }
 
         internal frmMain()
         {
@@ -269,7 +361,7 @@ namespace CloudMagic.GUI
                 parameters.GenerateExecutable = false;
 
                 var results = provider.CompileAssemblyFromSource(parameters, code);
-
+                
                 if (results.Errors.HasErrors)
                 {
                     foreach (CompilerError error in results.Errors)
@@ -289,10 +381,13 @@ namespace CloudMagic.GUI
                         var obj = Activator.CreateInstance(t);
                         combatRoutine = (CombatRoutine) obj;
 
-                        combatRoutine.Load(this);
+                        if (!combatRoutine.Load(this))
+                            return false;
                         combatRoutine.FileName = fileName;
 
                         Log.Write("Successfully loaded combat routine: " + combatRoutine.Name, Color.Green);
+                        characterInfo = new Thread(CharacterInfoThread) { IsBackground = true };
+                        characterInfo.Start();
 
                         if (SpellBook.Initialize(fileName, reloadUI))
                         {
@@ -737,7 +832,8 @@ namespace CloudMagic.GUI
 
         private void chkDisableOverlay_CheckedChanged(object sender, EventArgs e)
         {
-            ConfigFile.DisableOverlay = chkDisableOverlay.Checked;
+                ConfigFile.DisableOverlay = chkDisableOverlay.Checked;
+            
         }
 
         private void nudPulse_ValueChanged(object sender, EventArgs e)
@@ -892,6 +988,23 @@ namespace CloudMagic.GUI
             //{
             //    Log.Write("Please load a rotation so that I know which rotation to encrypt.", Color.Red);
             //}
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OverLay_WoW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OverLay_WoW.Checked == true)
+            {
+              ConfigFile.OverLay_WoW = true;
+            }
+            else if (OverLay_WoW.Checked == false)
+            {
+                ConfigFile.OverLay_WoW = false;
+            }
         }
     }
 }
