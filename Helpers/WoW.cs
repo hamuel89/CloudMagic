@@ -541,7 +541,7 @@ namespace CloudMagic.Helpers
         /// <returns>#num of piece of set worn</returns>
         public static int SetBonus(int tier)
         {
-            var c = WoW.GetBlockColor(3, 24);
+            var c = WoW.GetBlockColor(4, 13);
             if (c.B != 0)
                 return 0;
             try
@@ -549,7 +549,7 @@ namespace CloudMagic.Helpers
                 if (tier > 20 || tier < 19)
                     return 0;
                 
-                c = WoW.GetBlockColor(4, 24);
+                c = WoW.GetBlockColor(5, 13);
                 var slot = c.R;
                 switch (tier)
                 {
@@ -579,12 +579,12 @@ namespace CloudMagic.Helpers
         /// <returns>EquipmentSlot legendar worn</returns>
         public static int Legendary(int num)
         {
-            var c = WoW.GetBlockColor(3, 24);
+            var c = WoW.GetBlockColor(4, 13);
             if (c.B != 0)
                 return 0;
             try
             {
-                c = WoW.GetBlockColor(5, 24);
+                c = WoW.GetBlockColor(6, 13);
                 var slot = c.R;
                 switch (num)
                 {
@@ -637,6 +637,79 @@ namespace CloudMagic.Helpers
                 }
             }
         }
+
+
+        public static bool WoWGui
+        {
+            get
+            {
+                var control = GetBlockColor(8, 13);
+                if (control.G == 0 && control.B == 255)
+                    return true;
+                return false;
+            }
+        }
+
+        public static bool WoWGuiOn
+        {
+            get
+            {
+                if (!WoWGui) return false;
+                var c = GetBlockColor(7, 13);
+                if (c.R == 255)
+                    return true;
+                return false;
+            }
+        }
+
+        public static bool WoWGuiCoolDown
+        {
+            get
+            {
+                if (!WoWGui) return false;
+                var c = GetBlockColor(7, 13);
+                if (c.G == 255)
+                    return true;
+                return false;
+            }
+        }
+        public static bool WoWGuiAuto
+        {
+            get
+            {
+                if (!WoWGui) return false;
+                var c = GetBlockColor(8, 13);
+                if (c.R == 255)
+                    return true;
+                return false;
+
+
+            }
+        }
+        public static int WoWGuiMode
+        {
+            get
+            {
+                if (!WoWGui) return 1;
+                var c = GetBlockColor(7, 13);
+                try
+                {
+                    var health = dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()?["Value"].ToString();
+
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    return health != null ? int.Parse(health) : 3;
+                }
+                catch (Exception ex)
+                {
+                    Log.Write($"[WoWGuiMode] = {c.B}");
+                    Log.Write(ex.Message, Color.Red);
+                    return 100;
+                }
+            }
+        }
+    
+
+
 
         /// <summary>
         /// Gets the last spell casted identifier.
@@ -1468,32 +1541,32 @@ namespace CloudMagic.Helpers
         /// <returns></returns>
         public static int Talent(int row)
         {
-            var c = WoW.GetBlockColor(3, 24);
+            var c = WoW.GetBlockColor(4, 13);
             if (c.B != 0) return 0;
             try
             {
                 switch (row)
                 {
                     case 1:
-                         c = GetBlockColor(1, 24);
+                         c = GetBlockColor(2, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.R}'").FirstOrDefault()["Value"].ToString());
                     case 2:
-                        c = GetBlockColor(1, 24);
+                        c = GetBlockColor(2, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()["Value"].ToString());
                     case 3:
-                         c = GetBlockColor(1, 24);
+                         c = GetBlockColor(2, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()["Value"].ToString());
                     case 4:
-                        c = GetBlockColor(2, 24);
+                        c = GetBlockColor(3, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.R}'").FirstOrDefault()["Value"].ToString());
                     case 5:
-                        c = GetBlockColor(2, 24);
+                        c = GetBlockColor(3, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.G}'").FirstOrDefault()["Value"].ToString());
                     case 6:
-                        c = GetBlockColor(2, 24);
+                        c = GetBlockColor(3, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.B}'").FirstOrDefault()["Value"].ToString());
                     case 7:
-                        c = GetBlockColor(3, 24);
+                        c = GetBlockColor(4, 13);
                         return int.Parse(dtColorHelper.Select($"[Rounded] = '{c.R}'").FirstOrDefault()["Value"].ToString());
                 }
             }
@@ -1514,7 +1587,7 @@ namespace CloudMagic.Helpers
         {
             get
             {
-                var c = GetBlockColor(3, 24);
+                var c = GetBlockColor(4, 13);
 
                 try
                 {
@@ -1546,8 +1619,8 @@ namespace CloudMagic.Helpers
         {
             get
             {
-                var c = GetBlockColor(4, 24);
-                var control = GetBlockColor(3, 24);
+                var c = GetBlockColor(5, 13);
+                var control = GetBlockColor(4, 13);
                 try
                 {
                     if (control.B != 0) return "none";
@@ -1700,7 +1773,8 @@ namespace CloudMagic.Helpers
             }
             else
             {
-                string myKeyMapping = ConfigFile.ReadValue("Keybinds", spellId);
+                FileInfo RotationName = new FileInfo(SpellBook.FullRotationFilePath);
+                string myKeyMapping = ConfigFile.ReadValue($"Keybinds-{RotationName.Name}", spellId);
                 if (myKeyMapping.Trim() == "")
                     Log.Write("Casting spell: " + spellName + ", power = " + Power + ", unit power = " + UnitPower + ", Key = " + key, Color.Black);
                 else
@@ -1709,7 +1783,7 @@ namespace CloudMagic.Helpers
                     Log.Write("Casting spell: " + spellName + ", power = " + Power + ", unit power = " + UnitPower + ", Key = " + key, Color.Black);
                 }
             }
-
+            Log.WriteDirectlyToLogFile($"Pressed {key}");
             if (milliseconds < 50)
                 milliseconds = 50;
 
@@ -1733,6 +1807,7 @@ namespace CloudMagic.Helpers
             Mouse.LeftClick(960, 540);
             Thread.Sleep(50);
             Mouse.RightDown();
+            Log.WriteDirectlyToLogFile($"Casted on me {spellName}");
         }
 
         /// <summary>
@@ -1754,6 +1829,7 @@ namespace CloudMagic.Helpers
             Mouse.LeftClick(x, y);
             Thread.Sleep(50);
             Mouse.RightDown();
+            Log.WriteDirectlyToLogFile($"Key at location {key}");
         }
 
         /// <summary>
@@ -1763,7 +1839,7 @@ namespace CloudMagic.Helpers
         internal static void SendMacro(string macro)
         {
             Log.Write("Sending macro: " + macro, Color.Gray);
-
+            Log.WriteDirectlyToLogFile($"Sending macro {macro}");
             KeyPressRelease(Keys.Enter);
             Thread.Sleep(100);
             Write(macro);

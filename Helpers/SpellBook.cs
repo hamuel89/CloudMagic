@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using CloudMagic.Rotation;
 
 // ReSharper disable AssignNullToNotNullAttribute
 // ReSharper disable MemberCanBePrivate.Global
@@ -20,8 +21,9 @@ namespace CloudMagic.Helpers
 {
     public static class SpellBook
     {
-        private static string FullRotationFilePath = "";
-
+        
+        public static string FullRotationFilePath = "";
+        internal static CombatRoutine combatRoutine;
         public static List<Spell> Spells;
         public static List<Aura> Auras;
         public static List<Item> Items;
@@ -437,7 +439,7 @@ namespace CloudMagic.Helpers
             }
         }
 
-        private static string AddonPath => $"{WoW.AddonPath}\\{AddonName}";
+        public static string AddonPath => $"{WoW.AddonPath}\\{AddonName}";
 
         private static string LibStubPath => $"{WoW.AddonPath}\\{AddonName}\\Boss\\LibStub";
 
@@ -521,6 +523,7 @@ namespace CloudMagic.Helpers
                     sr.WriteLine($"## Version: {Application.ProductVersion}");
                     sr.WriteLine($"## SavedVariablesPerCharacter: {AddonName.Replace("\r", "").Replace("\n", "")}_settings");
                     sr.WriteLine($"{AddonName.Replace("\r", "").Replace("\n", "")}.lua");
+                    sr.WriteLine($"Gui.lua");
                     sr.WriteLine(@"#@no-lib-strip@");
                     sr.WriteLine("BossLib.xml");
                     sr.WriteLine("RangeLib.xml");
@@ -739,9 +742,10 @@ namespace CloudMagic.Helpers
                     sr.Close();
                 }
                 
+                
                 Log.Write("Addon file generated.", Color.Green);
 
-                CustomLua();
+                    CustomLua();
 
                 Log.Write($"Make sure that the addon: [{AddonName}] is enabled in your list of WoW Addons or the rotation bot will fail to work", Color.Black);
 
